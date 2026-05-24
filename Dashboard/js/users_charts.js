@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
   const loader = document.getElementById("loader");
-  fetch("http://127.0.0.1:8000/users", { credentials: "include" })
+  fetch(`${API_BASE}/users`, { credentials: "include" })
     .then((res) => res.json())
     .then((data) => {
       /* KPI */
@@ -120,3 +120,4 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
 });
+

@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   const loader = document.getElementById("loader");
 
-  fetch("http://127.0.0.1:8000/traffic", { credentials: "include" })
+  fetch(`${API_BASE}/traffic`, { credentials: "include" })
     .then((res) => res.json())
     .then((data) => {
       document.getElementById("sessions").innerText = data.total_sessions.toLocaleString();

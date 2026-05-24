@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   const loader = document.getElementById("loader");
 
-  fetch("http://127.0.0.1:8000/load", { credentials: "include" })
+  fetch(`${API_BASE}/load`, { credentials: "include" })
     .then((res) => res.json())
     .then((data) => {
       if (document.getElementById("cpu")) document.getElementById("cpu").innerText = data.avg_cpu_usage + "%";
@@ -90,3 +90,4 @@ document.addEventListener("DOMContentLoaded", function () {
       if (loader) loader.classList.add("hidden");
     });
 });
+

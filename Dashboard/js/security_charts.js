@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   const loader = document.getElementById("loader");
 
-  fetch("http://127.0.0.1:8000/security", { credentials: "include" })
+  fetch(`${API_BASE}/security`, { credentials: "include" })
     .then((res) => res.json())
     .then((data) => {
       if (document.getElementById("score")) document.getElementById("score").innerText = data.security_score + "%";
@@ -82,3 +82,4 @@ document.addEventListener("DOMContentLoaded", function () {
       if (loader) loader.classList.add("hidden");
     });
 });
+

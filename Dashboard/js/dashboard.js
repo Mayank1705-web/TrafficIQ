@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   const fetchDashboardData = () => {
-    return fetch("http://127.0.0.1:8000/dashboard-data", { credentials: "include" })
+    return fetch(`${API_BASE}/dashboard-data`, { credentials: "include" })
       .then(res => {
         if (!res.ok) throw new Error("Failed to fetch dashboard data");
         return res.json();
@@ -170,3 +170,4 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+
