@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Traffic Intelligence | TrafficIQ</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/js/auth.js"></script>
+    <script src="/js/common.js"></script>
+  <script src="/js/theme.js"></script>
+</head>
+
+<body class="page-traffic">
+  <div class="dashboard">
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+            <div class="logo">
+        <div class="logo-icon"><i class="fa-solid fa-chart-simple"></i></div>
+        <div>
+          <h2>TrafficIQ</h2>
+          <p>Analytics Platform</p>
+        </div>
+      </div>
+
+      <nav>
+        <ul>
+          <li>
+            <a href="index.html">
+              <i class="fa-solid fa-chart-line"></i> Dashboard
+            </a>
+          </li>
+
+          <li class="active">
+            <a href="traffic.html">
+              <i class="fa-solid fa-arrow-trend-up"></i> Traffic Intelligence
+            </a>
+          </li>
+
+          <li>
+            <a href="load.html">
+              <i class="fa-solid fa-server"></i> Load Intelligence
+            </a>
+          </li>
+
+          <li>
+            <a href="ads.html">
+              <i class="fa-solid fa-bullhorn"></i> Ad Analytics
+            </a>
+          </li>
+
+          <li>
+            <a href="users.html">
+              <i class="fa-solid fa-users"></i> User Behavior
+            </a>
+          </li>
+
+          <li>
+            <a href="security.html">
+              <i class="fa-solid fa-shield-halved"></i> Security Logs
+            </a>
+          </li>
+
+          <li>
+            <a href="configuration.html">
+              <i class="fa-solid fa-gear"></i> Configuration
+            </a>
+          </li>
+          <li><a href="reports.html"><i class="fa-solid fa-file-pdf"></i> Business Report</a></li>
+          <li><a href="about.html"><i class="fa-solid fa-address-card"></i> About Us</a></li>
+        </ul>
+      </nav>
+
+      <div class="status">
+        <p class="status-title">SYSTEM STATUS</p>
+        <p class="status-green">All Systems Operational</p>
+        <button onclick="logout()" class="logout-radial">
+          <span>
+            <i class="fa-solid fa-right-from-bracket"></i>
+            Logout
+          </span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main">
+      <!-- HERO HEADER -->
+
+      <header class="hero-blue">
+        <div class="hero-left">
+          <div class="hero-main-icon">
+            <i class="fa-solid fa-arrow-trend-up"></i>
+          </div>
+
+          <div class="hero-text">
+            <h1>Traffic Intelligence</h1>
+            <p>Comprehensive traffic analysis and trends</p>
+          </div>
+        </div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+          <button id="themeToggle" onclick="toggleTheme(event)" style="padding: 10px 15px; border-radius: 12px; border: none; cursor: pointer; background: rgba(255,255,255,0.2); color: white; font-weight: 600; transition: 0.3s; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-moon theme-icon-toggle"></i> Theme
+          </button>
+          <div class="live-box">
+          <span class="live-dot"></span>
+          LIVE NOW
+          <h3 id="clock"></h3>
+        </div>
+        </div>
+      </header>
+
+      <div class="middle-wrapper is-loading">
+        <!-- Loading Overlay -->
+        <div id="loader" class="loader-overlay">
+          <div class="loading-animation">
+            <div class="loading-bar"></div>
+            <div class="loading-bar"></div>
+            <div class="loading-bar"></div>
+            <div class="loading-bar"></div>
+            <div class="loading-bar"></div>
+          </div>
+          <div class="loader-text">Analyzing Traffic Patterns...</div>
+        </div>
+
+        <div class="content-to-blur">
+
+      <!-- METRIC CARDS -->
+
+      <section class="cards">
+        <div class="card metric-card">
+          <div class="card-top">
+            <div class="metric-icon blue">
+              <i class="fa-solid fa-globe"></i>
+            </div>
+          </div>
+
+          <h3>Total Sessions</h3>
+
+          <h1 id="sessions" class="metric-value blue-text">--</h1>
+        </div>
+        <div class="card metric-card">
+          <div class="card-top">
+            <div class="metric-icon purple">
+              <i class="fa-solid fa-arrow-trend-up"></i>
+            </div>
+          </div>
+
+          <h3>Avg. Session Duration</h3>
+
+          <h1 id="duration" class="metric-value purple-text">--</h1>
+        </div>
+        <div class="card metric-card">
+          <div class="card-top">
+            <div class="metric-icon orange">
+              <i class="fa-solid fa-clock"></i>
+            </div>
+          </div>
+
+          <h3>Pages Per Session</h3>
+
+          <h1 id="pages" class="metric-value orange-text">--</h1>
+        </div>
+        <div class="card metric-card">
+          <div class="card-top">
+            <div class="metric-icon green">
+              <i class="fa-solid fa-location-dot"></i>
+            </div>
+          </div>
+
+          <h3>Bounce Rate</h3>
+
+          <h1 id="bounce" class="metric-value green-text">--</h1>
+        </div>
+      </section>
+
+      <!-- CHARTS -->
+
+      <section class="charts">
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3 class="chart-title-blue">Hourly Traffic Pattern</h3>
+
+            <div class="chart-icon chart-blue">
+              <i class="fa-solid fa-clock"></i>
+            </div>
+          </div>
+
+          <div class="chart-wrap">
+            <canvas id="hourChart"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3 class="chart-title-purple">Monthly Traffic Growth</h3>
+
+            <div class="chart-icon chart-purple">
+              <i class="fa-solid fa-calendar"></i>
+            </div>
+          </div>
+
+          <div class="chart-wrap">
+            <canvas id="monthChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section class="charts">
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3 class="chart-title-orange">Traffic Sources</h3>
+
+            <div class="chart-icon chart-orange">
+              <i class="fa-solid fa-globe"></i>
+            </div>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="sourceChart"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3 class="chart-title-green">Geographic Distribution</h3>
+
+            <div class="chart-icon chart-green">
+              <div align="right">
+                <i class="fa-solid fa-location-dot"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-wrap">
+            <canvas id="geoChart"></canvas>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <footer class="dashboard-footer">
+        <p>TrafficIQ Analytics Platform | MediCaps University</p>
+
+        <span>© 2026 All Rights Reserved</span>
+      </footer>
+    </main>
+  </div>
+
+  <script src="/js/config.js"></script>
+  <script src="/js/charts.js"></script>
+  <script>
+    function updateClock() {
+      const clockElement = document.getElementById("clock");
+      if (clockElement) {
+        clockElement.innerHTML = new Date().toLocaleTimeString();
+      }
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    document.addEventListener("DOMContentLoaded", () => {
+      checkAuth();
+    });
+  </script>
+</body>
+
+</html>

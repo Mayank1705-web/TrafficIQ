@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Advertisement Analytics</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/static/js/auth.js"></script>
+    <script src="/js/theme.js"></script>
+</head>
+
+  <body class="page-ads">
+    <div class="dashboard">
+      <!-- SIDEBAR -->
+
+      <aside class="sidebar">
+              <div class="logo">
+        <div class="logo-icon"><i class="fa-solid fa-chart-simple"></i></div>
+        <div>
+          <h2>TrafficIQ</h2>
+          <p>Analytics Platform</p>
+        </div>
+      </div>
+
+        <nav>
+          <ul>
+            <li>
+              <a href="index.html">
+                <i class="fa-solid fa-chart-line"></i> Dashboard
+              </a>
+            </li>
+
+            <li>
+              <a href="traffic.html">
+                <i class="fa-solid fa-traffic-light"></i> Traffic Intelligence
+              </a>
+            </li>
+
+            <li>
+              <a href="load.html">
+                <i class="fa-solid fa-server"></i> Load Intelligence
+              </a>
+            </li>
+
+            <li class="active">
+              <a href="ads.html">
+                <i class="fa-solid fa-bullhorn"></i> Ad Analytics
+              </a>
+            </li>
+
+            <li>
+              <a href="users.html">
+                <i class="fa-solid fa-users"></i> User Behavior
+              </a>
+            </li>
+
+            <li>
+              <a href="security.html">
+                <i class="fa-solid fa-shield-halved"></i> Security Logs
+              </a>
+            </li>
+
+            <li>
+              <a href="configuration.html">
+                <i class="fa-solid fa-gear"></i> Configuration
+              </a>
+            </li>
+            <li>
+              <a href="reports.html">
+                <i class="fa-solid fa-file-pdf"></i> Business Report
+              </a>
+            </li>
+            <li>
+              <a href="about.html">
+                <i class="fa-solid fa-address-card"></i> About Us
+              </a>
+            </li>
+        </ul>
+        </nav>
+
+        <div class="status">
+          <p class="status-title">SYSTEM STATUS</p>
+          <p class="status-green">All Systems Operational</p>
+          <button onclick="logout()" class="logout-radial">
+            <span>
+              <i class="fa-solid fa-right-from-bracket"></i>
+              Logout
+            </span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- MAIN -->
+
+      <main class="main">
+        <!-- HERO -->
+
+        <header class="hero hero-orange">
+          <div class="hero-left">
+            <div class="hero-main-icon">
+              <i class="fa-solid fa-bullhorn"></i>
+            </div>
+
+            <div class="hero-text">
+              <h1>Advertisement Analytics</h1>
+              <p>Campaign performance and ROI tracking</p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 15px; align-items: center;">
+          <button id="themeToggle" onclick="toggleTheme(event)" style="padding: 10px 15px; border-radius: 12px; border: none; cursor: pointer; background: rgba(255,255,255,0.2); color: white; font-weight: 600; transition: 0.3s; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-moon theme-icon-toggle"></i> Theme
+          </button>
+          <div class="live-box">
+            <span class="live-dot"></span>
+            LIVE NOW
+            <h3 id="clock"></h3>
+          </div>
+        </div>
+        </header>
+
+        <div class="middle-wrapper is-loading">
+          <!-- Loading Overlay -->
+          <div id="loader" class="loader-overlay">
+            <div class="loading-animation">
+              <div class="loading-bar"></div>
+              <div class="loading-bar"></div>
+              <div class="loading-bar"></div>
+              <div class="loading-bar"></div>
+              <div class="loading-bar"></div>
+            </div>
+            <div class="loader-text">Optimizing Ad Revenue...</div>
+          </div>
+
+          <div class="content-to-blur">
+
+        <!-- KPI CARDS -->
+
+        <section class="cards">
+          <div class="card metric-card">
+            <div class="card-top">
+              <div class="metric-icon orange">
+                <i class="fa-solid fa-eye"></i>
+              </div>
+            </div>
+
+            <h3>Total Impressions</h3>
+            <h1 id="impressions" class="metric-value orange-text">--</h1>
+          </div>
+          <div class="card metric-card">
+            <div class="card-top">
+              <div class="metric-icon purple">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+              </div>
+            </div>
+
+            <h3>Click-Through Rate</h3>
+            <h1 id="ctr" class="metric-value purple-text">--</h1>
+          </div>
+          <div class="card metric-card">
+            <div class="card-top">
+              <div class="metric-icon blue">
+                <i class="fa-solid fa-dollar-sign"></i>
+              </div>
+            </div>
+
+            <h3>Cost Per Click</h3>
+            <h1 id="cpc" class="metric-value blue-text">--</h1>
+          </div>
+          <div class="card metric-card">
+            <div class="card-top">
+              <div class="metric-icon green">
+                <i class="fa-solid fa-arrow-trend-up"></i>
+              </div>
+            </div>
+
+            <h3>ROAS</h3>
+            <h1 id="roas" class="metric-value green-text">--</h1>
+          </div>
+        </section>
+
+        <!-- CHART -->
+
+        <section class="charts">
+          <!-- Campaign Performance -->
+          <div class="chart-card campaign-overview">
+            <div class="chart-header">
+              <h3 class="chart-title-orange">Campaign Performance Overview</h3>
+
+              <div class="chart-icon chart-orange">
+                <i class="fa-solid fa-bullhorn"></i>
+              </div>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="campaignChart"></canvas>
+            </div>
+          </div>
+
+          <!-- CTR Chart -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3 class="chart-title-purple">CTR & ROAS Trends</h3>
+
+              <div class="chart-icon chart-purple">
+                <i class="fa-solid fa-arrow-trend-up"></i>
+              </div>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="ctrChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Ad Format Chart -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3 class="chart-title-blue">Ad Format Performance</h3>
+
+              <div class="chart-icon chart-blue">
+                <i class="fa-solid fa-bullseye"></i>
+              </div>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="adFormatChart"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <section class="chart-card funnel-card">
+          <div class="chart-header">
+            <h3 class="chart-title-green">Advertisement Conversion Funnel</h3>
+
+            <div class="chart-icon chart-green">
+              <i class="fa-solid fa-bullseye"></i>
+            </div>
+          </div>
+
+          <div class="funnel-item">
+            <div class="funnel-left">
+              <div class="funnel-step">1</div>
+              <div class="funnel-label">Impressions</div>
+            </div>
+
+            <div class="funnel-right">
+              <strong id="funnel_impressions">--</strong>
+              <span id="pct_impressions">--</span>
+            </div>
+          </div>
+
+          <div class="funnel-item">
+            <div class="funnel-left">
+              <div class="funnel-step">2</div>
+              <div class="funnel-label">
+                Clicks <span id="loss_clicks" class="loss"></span>
+              </div>
+            </div>
+
+            <div class="funnel-right">
+              <strong id="funnel_clicks">--</strong>
+              <span id="pct_clicks">--</span>
+            </div>
+          </div>
+
+          <div class="funnel-item">
+            <div class="funnel-left">
+              <div class="funnel-step">3</div>
+              <div class="funnel-label">
+                Landing <span id="loss_landing" class="loss"></span>
+              </div>
+            </div>
+
+            <div class="funnel-right">
+              <strong id="funnel_landing">--</strong>
+              <span id="pct_landing">--</span>
+            </div>
+          </div>
+
+          <div class="funnel-item">
+            <div class="funnel-left">
+              <div class="funnel-step">4</div>
+              <div class="funnel-label">
+                Add to Cart <span id="loss_cart" class="loss"></span>
+              </div>
+            </div>
+
+            <div class="funnel-right">
+              <strong id="funnel_cart">--</strong>
+              <span id="pct_cart">--</span>
+            </div>
+          </div>
+
+          <div class="funnel-item">
+            <div class="funnel-left">
+              <div class="funnel-step">5</div>
+              <div class="funnel-label">
+                Checkout <span id="loss_checkout" class="loss"></span>
+              </div>
+            </div>
+
+            <div class="funnel-right">
+              <strong id="funnel_checkout">--</strong>
+              <span id="pct_checkout">--</span>
+            </div>
+          </div>
+
+          <div class="funnel-item">
+            <div class="funnel-left">
+              <div class="funnel-step">6</div>
+              <div class="funnel-label">
+                Purchase <span id="loss_purchase" class="loss"></span>
+              </div>
+            </div>
+
+            <div class="funnel-right">
+              <strong id="funnel_purchase">--</strong>
+              <span id="pct_purchase">--</span>
+            </div>
+          </div>
+
+          </div>
+        </div>
+
+        <footer class="dashboard-footer">
+          <p>TrafficIQ Analytics Platform | MediCaps University</p>
+          <span>© 2026 All Rights Reserved</span>
+        </footer>
+      </main>
+    </div>
+
+    <script src="/js/ads_charts.js"></script>
+    <script src="/js/config.js"></script>
+
+    <script>
+      function updateClock() {
+        const clockElement = document.getElementById("clock");
+        if (clockElement) {
+          clockElement.innerHTML = new Date().toLocaleTimeString();
+        }
+      }
+      setInterval(updateClock, 1000);
+      updateClock();
+
+      document.addEventListener("DOMContentLoaded", () => {
+        checkAuth();
+      });
+    </script>
+      <script src="/js/common.js"></script>
+  </body>
+</html>

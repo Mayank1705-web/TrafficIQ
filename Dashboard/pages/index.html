@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TrafficIQ Dashboard</title>
+
+  <link rel="stylesheet" href="/css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="/js/auth.js"></script>
+  <script src="/js/common.js"></script>
+  <script src="/js/theme.js"></script>
+</head>
+
+<body class="page-index">
+
+  <div class="dashboard">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-icon"><i class="fa-solid fa-chart-simple"></i></div>
+        <div>
+          <h2>TrafficIQ</h2>
+          <p>Analytics Platform</p>
+        </div>
+      </div>
+
+      <nav>
+        <ul>
+          <li class="active"><a href="index.html"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
+          <li><a href="traffic.html"><i class="fa-solid fa-arrow-trend-up"></i> Traffic Intelligence</a></li>
+          <li><a href="load.html"><i class="fa-solid fa-server"></i> Load Intelligence</a></li>
+          <li><a href="ads.html"><i class="fa-solid fa-bullhorn"></i> Ad Analytics</a></li>
+          <li><a href="users.html"><i class="fa-solid fa-users"></i> User Behavior</a></li>
+          <li><a href="security.html"><i class="fa-solid fa-shield-halved"></i> Security Logs</a></li>
+          <li><a href="configuration.html"><i class="fa-solid fa-gear"></i> Configuration</a></li>
+          <li><a href="reports.html"><i class="fa-solid fa-file-pdf"></i> Business Report</a></li>
+          <li><a href="about.html"><i class="fa-solid fa-address-card"></i> About Us</a></li>
+        </ul>
+      </nav>
+
+      <div class="status">
+        <p class="status-title">SYSTEM STATUS</p>
+        <p class="status-green">All Systems Operational</p>
+        <button onclick="logout()" class="logout-radial">
+          <span>
+            <i class="fa-solid fa-right-from-bracket"></i>
+            Logout
+          </span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <!-- HERO -->
+      <header class="hero">
+        <div>
+          <h1>Dashboard Overview</h1>
+          <p>Real-Time E-Commerce Analytics</p>
+        </div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+          <button id="themeToggle" onclick="toggleTheme(event)"
+            style="padding: 10px 15px; border-radius: 12px; border: none; cursor: pointer; background: rgba(255,255,255,0.2); color: white; font-weight: 600; transition: 0.3s; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-moon theme-icon-toggle"></i> Theme
+          </button>
+          <div class="live-box">
+            <span class="live-dot"></span>
+            LIVE NOW
+            <h3 id="clock"></h3>
+          </div>
+        </div>
+      </header>
+
+      <div class="middle-wrapper is-loading">
+        <!-- Loading Overlay -->
+        <div id="loader" class="loader-overlay">
+          <div class="loading-animation">
+            <div class="loading-bar"></div>
+            <div class="loading-bar"></div>
+            <div class="loading-bar"></div>
+            <div class="loading-bar"></div>
+            <div class="loading-bar"></div>
+          </div>
+          <div class="loader-text">Calculating Intelligence...</div>
+        </div>
+
+        <div class="content-to-blur">
+
+          <!-- KPI CARDS -->
+          <section class="cards">
+
+            <div class="card metric-card">
+              <div class="card-top">
+                <div class="metric-icon blue">
+                  <i class="fa-solid fa-arrow-trend-up"></i>
+                </div>
+              </div>
+              <h3>Total Traffic</h3>
+              <h1 id="totalTraffic" class="metric-value blue-text">--</h1>
+            </div>
+
+            <div class="card metric-card">
+              <div class="card-top">
+                <div class="metric-icon orange">
+                  <i class="fa-solid fa-clock"></i>
+                </div>
+              </div>
+              <h3>Peak Hour</h3>
+              <h1 id="peakHour" class="metric-value orange-text">--</h1>
+            </div>
+
+            <div class="card metric-card">
+              <div class="card-top">
+                <div class="metric-icon purple">
+                  <i class="fa-solid fa-bolt"></i>
+                </div>
+              </div>
+              <h3>Ad CTR</h3>
+              <h1 id="ctr" class="metric-value purple-text">--</h1>
+            </div>
+
+            <div class="card status-card" id="statusCard">
+              <div class="card-top">
+                <div class="status-icon">
+                  <i class="fa-solid fa-heart-pulse"></i>
+                </div>
+              </div>
+              <h3>System Status</h3>
+              <h1 id="systemStatus" class="status-text">--</h1>
+            </div>
+
+          </section>
+
+          <!-- CHARTS ROW 1 -->
+          <section class="charts">
+
+            <div class="chart-card">
+              <div class="chart-header">
+                <h3>Website Traffic</h3>
+                <div class="chart-icon chart-blue">
+                  <i class="fa-solid fa-arrow-trend-up"></i>
+                </div>
+              </div>
+              <div class="chart-wrap">
+                <canvas id="trafficChart"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-header">
+                <h3>Server Load</h3>
+                <div class="chart-icon chart-purple">
+                  <i class="fa-solid fa-wave-square"></i>
+                </div>
+              </div>
+              <div class="chart-wrap">
+                <canvas id="loadChart"></canvas>
+              </div>
+            </div>
+
+          </section>
+
+          <!-- CHARTS ROW 2 -->
+          <section class="charts">
+
+            <div class="chart-card">
+              <div class="chart-header">
+                <h3>Ad Performance</h3>
+                <div class="chart-icon chart-orange">
+                  <i class="fa-solid fa-bolt"></i>
+                </div>
+              </div>
+              <div class="chart-wrap">
+                <canvas id="adsChart"></canvas>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-header">
+                <h3>Buyer Frequency</h3>
+                <div class="chart-icon chart-green">
+                  <i class="fa-solid fa-users"></i>
+                </div>
+              </div>
+              <div class="chart-wrap">
+                <canvas id="userChart"></canvas>
+              </div>
+            </div>
+
+        </div>
+      </div>
+
+      <footer class="dashboard-footer">
+        <p>TrafficIQ Analytics Platform | MediCaps University</p>
+        <span>© 2026 All Rights Reserved</span>
+      </footer>
+
+    </main>
+  </div>
+
+  <script src="/js/dashboard.js"></script>
+  <script src="/js/config.js"></script>
+
+  <script>
+    /* Clock */
+    function updateClock() {
+      document.getElementById("clock").innerHTML = new Date().toLocaleTimeString();
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    /* Auth */
+    document.addEventListener("DOMContentLoaded", () => { checkAuth(); });
+
+    /* System status helpers — called from dashboard.js */
+    function updateSystemStatus(status) {
+      const statusText = document.getElementById("systemStatus");
+      const statusCard = document.getElementById("statusCard");
+      statusCard.classList.remove("good", "fine", "moderate", "risk");
+      statusText.classList.remove("good", "fine", "moderate", "risk");
+      statusText.innerText = status.toUpperCase();
+      statusCard.classList.add(status);
+      statusText.classList.add(status);
+    }
+
+    function autoStatus(load) {
+      if (load > 85) return "risk";
+      if (load > 60) return "moderate";
+      if (load > 40) return "fine";
+      return "good";
+    }
+  </script>
+
+</body>
+
+</html>

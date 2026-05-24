@@ -1,0 +1,1264 @@
+<!doctype html>
+<meta charset="UTF-8" />
+<title>Signup | TrafficIQ</title>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --bg: #09090f;
+        --surface: rgba(255, 255, 255, 0.032);
+        --border: rgba(255, 255, 255, 0.08);
+        --text: #f1f5f9;
+        --muted: #64748b;
+        --link: #a78bfa;
+        --accent1: #c084fc;
+        --accent2: #38bdf8;
+        --input-bg: rgba(255, 255, 255, 0.045);
+        --radius: 14px;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        font-weight: 400;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      .mesh {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        background:
+          radial-gradient(
+            ellipse 80% 60% at 15% 20%,
+            rgba(124, 58, 237, 0.18) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse 60% 50% at 85% 75%,
+            rgba(56, 189, 248, 0.14) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse 50% 40% at 60% 10%,
+            rgba(192, 132, 252, 0.1) 0%,
+            transparent 55%
+          );
+      }
+
+      .grid-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.024) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.024) 1px,
+            transparent 1px
+          );
+        background-size: 48px 48px;
+        mask-image: radial-gradient(
+          ellipse 90% 90% at 50% 50%,
+          black 20%,
+          transparent 80%
+        );
+      }
+
+      canvas#bg-canvas {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      .login-box {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        max-width: 440px;
+        margin: 32px 16px;
+        padding: 40px 36px 32px;
+        background: rgba(10, 10, 20, 0.72);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+      }
+
+      .logo-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 4px;
+      }
+
+      .logo-svg-wrap {
+        width: 42px;
+        height: 42px;
+        flex-shrink: 0;
+        animation: logoGlow 3s ease-in-out infinite alternate;
+      }
+      @keyframes logoGlow {
+        0% {
+          filter: drop-shadow(0 0 6px rgba(192, 132, 252, 0.5))
+            drop-shadow(0 0 16px rgba(56, 189, 248, 0.2));
+        }
+        100% {
+          filter: drop-shadow(0 0 18px rgba(192, 132, 252, 1))
+            drop-shadow(0 0 36px rgba(56, 189, 248, 0.7));
+        }
+      }
+
+      .ring-outer {
+        animation: spinCW 7s linear infinite;
+        transform-origin: 18px 18px;
+      }
+      .ring-mid {
+        animation: spinCCW 5s linear infinite;
+        transform-origin: 18px 18px;
+      }
+      .ring-inner {
+        animation: spinCW 3s linear infinite;
+        transform-origin: 18px 18px;
+      }
+      .scanner {
+        animation: scanSweep 2.5s linear infinite;
+        transform-origin: 18px 18px;
+      }
+      .orbit-a {
+        animation: spinCW 2s linear infinite;
+        transform-origin: 18px 18px;
+      }
+      .orbit-b {
+        animation: spinCCW 3s linear infinite;
+        transform-origin: 18px 18px;
+      }
+      .orbit-c {
+        animation: spinCW 1.6s linear infinite;
+        transform-origin: 18px 18px;
+      }
+      .center-core {
+        animation: corePulse 2s ease-in-out infinite;
+        transform-origin: 18px 18px;
+      }
+      .cross-hair {
+        animation: crossBlink 4s ease-in-out infinite alternate;
+      }
+
+      @keyframes spinCW {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes spinCCW {
+        to {
+          transform: rotate(-360deg);
+        }
+      }
+      @keyframes scanSweep {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes corePulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.5);
+          opacity: 0.65;
+        }
+      }
+      @keyframes crossBlink {
+        0% {
+          opacity: 0.2;
+        }
+        100% {
+          opacity: 0.5;
+        }
+      }
+
+      .login-box h1 {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.35rem;
+        font-weight: 900;
+        letter-spacing: 0.12em;
+        background: linear-gradient(
+          135deg,
+          #e0aaff 0%,
+          #a78bfa 40%,
+          #38bdf8 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .tagline {
+        text-align: center;
+        font-size: 0.72rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 26px;
+      }
+
+      .section-label {
+        font-size: 0.68rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin: 16px 0 8px 2px;
+        opacity: 0.7;
+      }
+
+      .field-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .field {
+        position: relative;
+        margin-bottom: 12px;
+      }
+
+      .field input,
+      .field select {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        color: var(--text);
+        font-size: 0.95rem;
+        padding: 14px 14px 14px 46px;
+        outline: none;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        -webkit-appearance: none;
+        appearance: none;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+      }
+
+      .field label {
+        position: absolute;
+        left: 46px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted);
+        font-size: 0.95rem;
+        pointer-events: none;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        background: transparent;
+      }
+
+      /* Floating Label Trigger */
+      .field input:focus ~ label,
+      .field input:not(:placeholder-shown) ~ label {
+        top: -1px;
+        left: 14px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--accent1);
+        background: #0d0d16;
+        padding: 0 8px;
+        border-radius: 4px;
+        transform: translateY(-50%);
+        letter-spacing: 0.05em;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      }
+
+      .field select {
+        background-color: #0f0f1a;
+        color: var(--text);
+        cursor: pointer;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%2364748b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        padding-right: 36px;
+      }
+
+      .field select option {
+        background-color: #0f0f1a;
+        color: var(--text);
+      }
+
+      .field select option:disabled {
+        color: var(--muted);
+      }
+
+      .field input:hover,
+      .field select:hover {
+        border-color: rgba(192, 132, 252, 0.4);
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .field input:focus,
+      .field select:focus {
+        border-color: var(--accent2);
+        background: rgba(56, 189, 248, 0.05);
+        box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.15), inset 0 2px 4px rgba(0,0,0,0.2);
+      }
+
+      .field input:focus ~ .field-icon,
+      .field select:focus ~ .field-icon {
+        stroke: var(--accent2);
+        opacity: 1;
+        transform: translateY(-50%) scale(1.1);
+      }
+
+      .field-icon {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 20px;
+        height: 20px;
+        opacity: 0.5;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: none;
+      }
+
+      .eye-btn {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2px;
+        opacity: 0.55;
+        transition: opacity 0.2s;
+      }
+      .eye-btn:hover {
+        opacity: 1;
+      }
+      .eye-btn svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      /* Strength Meter */
+      .strength-wrap {
+        margin: -4px 0 10px;
+      }
+      .strength-track {
+        height: 3px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .strength-fill {
+        height: 100%;
+        width: 0%;
+        border-radius: 99px;
+        transition:
+          width 0.4s ease,
+          background 0.3s;
+      }
+      .strength-label {
+        font-size: 0.7rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-top: 5px;
+        height: 12px;
+        font-weight: 700;
+      }
+
+      /* Requirements */
+      .req-list {
+        margin: 0 0 12px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5px 12px;
+      }
+      .req {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.72rem;
+        color: var(--muted);
+        transition: color 0.25s;
+      }
+      .req svg {
+        width: 12px;
+        height: 12px;
+        opacity: 0.2;
+        transition:
+          opacity 0.25s,
+          transform 0.3s;
+      }
+      .req.met {
+        color: #86efac;
+      }
+      .req.met svg {
+        opacity: 1;
+        transform: scale(1.1);
+      }
+
+      .match-hint {
+        font-size: 0.72rem;
+        margin: -6px 0 10px 2px;
+        height: 14px;
+        opacity: 0;
+      }
+      .match-hint.show {
+        opacity: 1;
+      }
+      .match-hint.ok {
+        color: #86efac;
+      }
+      .match-hint.bad {
+        color: #f87171;
+      }
+
+      .terms-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin: 8px 0 18px;
+      }
+      .terms-row label {
+        font-size: 0.78rem;
+        color: var(--muted);
+        cursor: pointer;
+      }
+
+      #signup-btn {
+        width: 100%;
+        background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+        border: none;
+        border-radius: 10px;
+        color: #fff;
+        padding: 13px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.2s;
+      }
+      #signup-btn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+      #signup-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(124, 58, 237, 0.4);
+      }
+
+      .footer-link {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 0.82rem;
+        color: var(--muted);
+      }
+      .footer-link a {
+        color: var(--link);
+        text-decoration: none;
+      }
+
+      /* Terms Modal Styles */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+      .modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+      .modal-content {
+        background: rgba(10, 10, 20, 0.95);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        width: 90%;
+        max-width: 850px;
+        max-height: 90vh;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 32px 100px rgba(0, 0, 0, 0.9);
+        transform: translateY(20px) scale(0.95);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .modal-overlay.active .modal-content {
+        transform: translateY(0) scale(1);
+      }
+      .modal-header {
+        padding: 32px 40px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .modal-header h2 {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.5rem;
+        letter-spacing: 0.05em;
+        color: var(--accent1);
+        margin: 0;
+      }
+      .modal-close {
+        background: none;
+        border: none;
+        color: var(--muted);
+        cursor: pointer;
+        padding: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.2s;
+      }
+      .modal-close:hover {
+        color: var(--text);
+      }
+      .modal-body {
+        padding: 40px;
+        overflow-y: auto;
+        color: #cbd5e1;
+        font-size: 1rem;
+        line-height: 1.7;
+      }
+      .modal-body p {
+        margin-bottom: 16px;
+      }
+      .modal-body h3 {
+        color: var(--accent2);
+        font-size: 1.15rem;
+        margin: 30px 0 12px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+      }
+      .modal-body h3:first-child {
+        margin-top: 0;
+      }
+      .modal-body::-webkit-scrollbar {
+        width: 8px;
+      }
+      .modal-body::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.02);
+      }
+      .modal-body::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+      }
+      .modal-footer {
+        padding: 24px 40px;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        display: flex;
+        justify-content: flex-end;
+      }
+      .btn-accept {
+        background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+        border: none;
+        border-radius: 8px;
+        color: #fff;
+        padding: 12px 32px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.2s;
+      }
+      .btn-accept:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(124, 58, 237, 0.4);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="mesh"></div>
+    <div class="grid-overlay"></div>
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="login-box">
+      <div class="logo-wrap">
+        <div class="logo-svg-wrap"><i class="fa-solid fa-chart-simple"></i></div>
+        <h1>TrafficIQ</h1>
+      </div>
+      <p class="tagline">Create your account</p>
+
+      <p class="section-label">Account</p>
+
+      <div class="field">
+        <input
+          id="username"
+          type="text"
+          placeholder=" "
+          oninput="updateBtn()"
+        />
+        <label for="username">Username</label>
+        <svg
+          class="field-icon"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="#c084fc"
+        >
+          <circle cx="8" cy="5.5" r="2.5" stroke-width="1.2" />
+          <path d="M2 13.5c0-3 2.5-5 6-5s6 2 6 5" stroke-width="1.2" />
+        </svg>
+      </div>
+
+      <div class="field">
+        <input
+          id="email"
+          type="email"
+          placeholder=" "
+          oninput="updateBtn()"
+        />
+        <label for="email">Email address</label>
+        <svg
+          class="field-icon"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="#c084fc"
+        >
+          <rect
+            x="1.5"
+            y="3.5"
+            width="13"
+            height="9"
+            rx="1.5"
+            stroke-width="1.2"
+          />
+          <path d="M1.5 5.5l6.5 4 6.5-4" stroke-width="1.2" />
+        </svg>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <select id="role" onchange="updateBtn()">
+            <option value="" disabled selected>Role</option>
+            <option>Data Analyst</option>
+            <option>Data Scientist</option>
+            <option>Data Engineer</option>
+            <option>Machine Learning Engineer</option>
+            <option>Software Engineer</option>
+            <option>Frontend Developer</option>
+            <option>Backend Developer</option>
+            <option>Full Stack Developer</option>
+            <option>DevOps Engineer</option>
+            <option>Cybersecurity Analyst</option>
+            <option>Cloud Architect</option>
+            <option>AI Researcher</option>
+            <option>Database Administrator</option>
+            <option>Product Manager</option>
+            <option>Systems Analyst</option>
+            <option>Network Engineer</option>
+            <option>QA Engineer</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <select id="country" onchange="updateBtn()">
+            <option value="" disabled selected>Country</option>
+            <option>Afghanistan</option>
+            <option>Albania</option>
+            <option>Algeria</option>
+            <option>Andorra</option>
+            <option>Angola</option>
+            <option>Antigua and Barbuda</option>
+            <option>Argentina</option>
+            <option>Armenia</option>
+            <option>Australia</option>
+            <option>Austria</option>
+            <option>Azerbaijan</option>
+            <option>Bahamas</option>
+            <option>Bahrain</option>
+            <option>Bangladesh</option>
+            <option>Barbados</option>
+            <option>Belarus</option>
+            <option>Belgium</option>
+            <option>Belize</option>
+            <option>Benin</option>
+            <option>Bhutan</option>
+            <option>Bolivia</option>
+            <option>Bosnia and Herzegovina</option>
+            <option>Botswana</option>
+            <option>Brazil</option>
+            <option>Brunei</option>
+            <option>Bulgaria</option>
+            <option>Burkina Faso</option>
+            <option>Burundi</option>
+            <option>Côte d'Ivoire</option>
+            <option>Cabo Verde</option>
+            <option>Cambodia</option>
+            <option>Cameroon</option>
+            <option>Canada</option>
+            <option>Central African Republic</option>
+            <option>Chad</option>
+            <option>Chile</option>
+            <option>China</option>
+            <option>Colombia</option>
+            <option>Comoros</option>
+            <option>Congo (Congo-Brazzaville)</option>
+            <option>Costa Rica</option>
+            <option>Croatia</option>
+            <option>Cuba</option>
+            <option>Cyprus</option>
+            <option>Czechia (Czech Republic)</option>
+            <option>Democratic Republic of the Congo</option>
+            <option>Denmark</option>
+            <option>Djibouti</option>
+            <option>Dominica</option>
+            <option>Dominican Republic</option>
+            <option>Ecuador</option>
+            <option>Egypt</option>
+            <option>El Salvador</option>
+            <option>Equatorial Guinea</option>
+            <option>Eritrea</option>
+            <option>Estonia</option>
+            <option>Eswatini (fmr. Swaziland)</option>
+            <option>Ethiopia</option>
+            <option>Fiji</option>
+            <option>Finland</option>
+            <option>France</option>
+            <option>Gabon</option>
+            <option>Gambia</option>
+            <option>Georgia</option>
+            <option>Germany</option>
+            <option>Ghana</option>
+            <option>Greece</option>
+            <option>Grenada</option>
+            <option>Guatemala</option>
+            <option>Guinea</option>
+            <option>Guinea-Bissau</option>
+            <option>Guyana</option>
+            <option>Haiti</option>
+            <option>Holy See</option>
+            <option>Honduras</option>
+            <option>Hungary</option>
+            <option>Iceland</option>
+            <option>India</option>
+            <option>Indonesia</option>
+            <option>Iran</option>
+            <option>Iraq</option>
+            <option>Ireland</option>
+            <option>Israel</option>
+            <option>Italy</option>
+            <option>Jamaica</option>
+            <option>Japan</option>
+            <option>Jordan</option>
+            <option>Kazakhstan</option>
+            <option>Kenya</option>
+            <option>Kiribati</option>
+            <option>Kuwait</option>
+            <option>Kyrgyzstan</option>
+            <option>Laos</option>
+            <option>Latvia</option>
+            <option>Lebanon</option>
+            <option>Lesotho</option>
+            <option>Liberia</option>
+            <option>Libya</option>
+            <option>Liechtenstein</option>
+            <option>Lithuania</option>
+            <option>Luxembourg</option>
+            <option>Madagascar</option>
+            <option>Malawi</option>
+            <option>Malaysia</option>
+            <option>Maldives</option>
+            <option>Mali</option>
+            <option>Malta</option>
+            <option>Marshall Islands</option>
+            <option>Mauritania</option>
+            <option>Mauritius</option>
+            <option>Mexico</option>
+            <option>Micronesia</option>
+            <option>Moldova</option>
+            <option>Monaco</option>
+            <option>Mongolia</option>
+            <option>Montenegro</option>
+            <option>Morocco</option>
+            <option>Mozambique</option>
+            <option>Myanmar (formerly Burma)</option>
+            <option>Namibia</option>
+            <option>Nauru</option>
+            <option>Nepal</option>
+            <option>Netherlands</option>
+            <option>New Zealand</option>
+            <option>Nicaragua</option>
+            <option>Niger</option>
+            <option>Nigeria</option>
+            <option>North Korea</option>
+            <option>North Macedonia</option>
+            <option>Norway</option>
+            <option>Oman</option>
+            <option>Pakistan</option>
+            <option>Palau</option>
+            <option>Palestine State</option>
+            <option>Panama</option>
+            <option>Papua New Guinea</option>
+            <option>Paraguay</option>
+            <option>Peru</option>
+            <option>Philippines</option>
+            <option>Poland</option>
+            <option>Portugal</option>
+            <option>Qatar</option>
+            <option>Romania</option>
+            <option>Russia</option>
+            <option>Rwanda</option>
+            <option>Saint Kitts and Nevis</option>
+            <option>Saint Lucia</option>
+            <option>Saint Vincent and the Grenadines</option>
+            <option>Samoa</option>
+            <option>San Marino</option>
+            <option>Sao Tome and Principe</option>
+            <option>Saudi Arabia</option>
+            <option>Senegal</option>
+            <option>Serbia</option>
+            <option>Seychelles</option>
+            <option>Sierra Leone</option>
+            <option>Singapore</option>
+            <option>Slovakia</option>
+            <option>Slovenia</option>
+            <option>Solomon Islands</option>
+            <option>Somalia</option>
+            <option>South Africa</option>
+            <option>South Korea</option>
+            <option>South Sudan</option>
+            <option>Spain</option>
+            <option>Sri Lanka</option>
+            <option>Sudan</option>
+            <option>Suriname</option>
+            <option>Sweden</option>
+            <option>Switzerland</option>
+            <option>Syria</option>
+            <option>Tajikistan</option>
+            <option>Tanzania</option>
+            <option>Thailand</option>
+            <option>Timor-Leste</option>
+            <option>Togo</option>
+            <option>Tonga</option>
+            <option>Trinidad and Tobago</option>
+            <option>Tunisia</option>
+            <option>Turkey</option>
+            <option>Turkmenistan</option>
+            <option>Tuvalu</option>
+            <option>Uganda</option>
+            <option>Ukraine</option>
+            <option>United Arab Emirates</option>
+            <option>United Kingdom</option>
+            <option>United States of America</option>
+            <option>Uruguay</option>
+            <option>Uzbekistan</option>
+            <option>Vanuatu</option>
+            <option>Venezuela</option>
+            <option>Vietnam</option>
+            <option>Yemen</option>
+            <option>Zambia</option>
+            <option>Zimbabwe</option>
+          </select>
+        </div>
+      </div>
+
+      <p class="section-label">Professional Info</p>
+      <div class="field">
+        <input
+          id="company"
+          type="text"
+          placeholder=" "
+          oninput="updateBtn()"
+        />
+        <label for="company">Company name</label>
+        <svg
+          class="field-icon"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="#c084fc"
+        >
+          <rect x="3" y="4" width="10" height="10" rx="1" stroke-width="1.2"/>
+          <path d="M7 14V10h2v4 M6 6.5h.01 M10 6.5h.01 M6 8.5h.01 M10 8.5h.01" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <p class="section-label">Security</p>
+      <div class="field">
+        <input
+          id="password"
+          type="password"
+          placeholder=" "
+          oninput="onPasswordInput()"
+        />
+        <label for="password">Password</label>
+        <svg
+          class="field-icon"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="#c084fc"
+        >
+          <rect x="3" y="7" width="10" height="7" rx="1.5" stroke-width="1.2"/>
+          <path d="M5 7V5a3 3 0 116 0v2" stroke-width="1.2"/>
+        </svg>
+        <!-- Clean SVG eye icon -->
+        <button
+          class="eye-btn"
+          type="button"
+          id="eye-btn-1"
+          onclick="toggleEye('password', 'eye-btn-1')"
+          aria-label="Toggle password visibility"
+        >
+          <svg
+            id="eye-icon-1"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <ellipse cx="12" cy="12" rx="9" ry="5.5" />
+            <circle cx="12" cy="12" r="2.2" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="strength-wrap">
+        <div class="strength-track">
+          <div class="strength-fill" id="strength-fill"></div>
+        </div>
+        <div id="strength-label" class="strength-label"></div>
+      </div>
+
+      <div class="req-list">
+        <div class="req" id="req-len">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor">
+            <path d="M3 6l2 2 4-4" stroke-width="1.5" />
+          </svg>
+          8+ characters
+        </div>
+        <div class="req" id="req-upper">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor">
+            <path d="M3 6l2 2 4-4" stroke-width="1.5" />
+          </svg>
+          Uppercase
+        </div>
+        <div class="req" id="req-num">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor">
+            <path d="M3 6l2 2 4-4" stroke-width="1.5" />
+          </svg>
+          Number
+        </div>
+        <div class="req" id="req-sym">
+          <svg viewBox="0 0 12 12" fill="none" stroke="currentColor">
+            <path d="M3 6l2 2 4-4" stroke-width="1.5" />
+          </svg>
+          Symbol
+        </div>
+      </div>
+
+      <div class="field">
+        <input
+          id="confirm"
+          type="password"
+          placeholder=" "
+          oninput="onConfirmInput()"
+        />
+        <label for="confirm">Confirm password</label>
+        <svg
+          class="field-icon"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="#c084fc"
+        >
+          <path d="M4.5 8L7 10.5 11.5 5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="8" cy="8" r="6.5" stroke-width="1.2"/>
+        </svg>
+      </div>
+      <div id="match-hint" class="match-hint"></div>
+
+      <div class="terms-row">
+        <input type="checkbox" id="terms" onchange="updateBtn()" />
+        <label for="terms">I agree to the <a href="#" onclick="openTermsPopup(event)">Terms</a></label>
+      </div>
+
+      <button id="signup-btn" onclick="signup()" disabled>
+        Create Account
+      </button>
+      <p class="footer-link">
+        Already have an account? <a href="login.html">Sign in</a>
+      </p>
+    </div>
+
+    <script>
+      const canvas = document.getElementById("bg-canvas");
+      const ctx = canvas.getContext("2d");
+      let W,
+        H,
+        particles = [];
+      function resize() {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      }
+      window.addEventListener("resize", resize);
+      resize();
+
+      class P {
+        constructor() {
+          this.reset();
+        }
+        reset() {
+          this.x = Math.random() * W;
+          this.y = Math.random() * H;
+          this.r = Math.random() * 2.2 + 0.3;
+          this.vy = -(Math.random() * 0.4 + 0.1);
+          this.vx = (Math.random() - 0.5) * 0.15;
+          // Mix of purple and cyan tones
+          const hues = ["#c084fc", "#a78bfa", "#38bdf8", "#818cf8", "#e0aaff"];
+          this.color = hues[Math.floor(Math.random() * hues.length)];
+          this.opacity = Math.random() * 0.7 + 0.2;
+        }
+        draw() {
+          ctx.globalAlpha = this.opacity;
+          ctx.fillStyle = this.color;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.globalAlpha = 1;
+        }
+        update() {
+          this.y += this.vy;
+          this.x += this.vx;
+          if (this.y < -5 || this.x < -5 || this.x > W + 5) this.reset();
+        }
+      }
+
+      // 150 particles instead of 50
+      for (let i = 0; i < 150; i++) {
+        const p = new P();
+        p.y = Math.random() * H; // scatter vertically on init
+        particles.push(p);
+      }
+
+      function loop() {
+        ctx.clearRect(0, 0, W, H);
+        particles.forEach((p) => {
+          p.update();
+          p.draw();
+        });
+        requestAnimationFrame(loop);
+      }
+      loop();
+
+      const rules = {
+        len: (v) => v.length >= 8,
+        upper: (v) => /[A-Z]/.test(v),
+        num: (v) => /[0-9]/.test(v),
+        sym: (v) => /[^A-Za-z0-9]/.test(v),
+      };
+
+      const meta = [
+        { l: "", c: "#ef4444", w: "0%" },
+        { l: "Weak", c: "#ef4444", w: "25%" },
+        { l: "Fair", c: "#f97316", w: "50%" },
+        { l: "Good", c: "#eab308", w: "75%" },
+        { l: "Strong", c: "#22c55e", w: "100%" },
+      ];
+
+      function onPasswordInput() {
+        const val = document.getElementById("password").value;
+        let score = 0;
+        for (const [key, fn] of Object.entries(rules)) {
+          const isMet = fn(val);
+          document.getElementById("req-" + key).classList.toggle("met", isMet);
+          if (isMet) score++;
+        }
+        const m = val.length === 0 ? meta[0] : meta[score];
+        const fill = document.getElementById("strength-fill");
+        const lbl = document.getElementById("strength-label");
+        fill.style.width = m.w;
+        fill.style.background = m.c;
+        lbl.textContent = m.l;
+        lbl.style.color = m.c;
+        updateBtn();
+      }
+
+      function onConfirmInput() {
+        const pw = document.getElementById("password").value;
+        const cfm = document.getElementById("confirm").value;
+        const h = document.getElementById("match-hint");
+        if (!cfm) {
+          h.className = "match-hint";
+          return;
+        }
+        h.className = "match-hint show " + (pw === cfm ? "ok" : "bad");
+        h.textContent =
+          pw === cfm ? "Passwords match ✓" : "Passwords do not match";
+        updateBtn();
+      }
+      function updateBtn() {const ok =
+          document.getElementById("username").value &&
+          document.getElementById("email").value &&
+          Object.values(rules).every((f) => f(document.getElementById("password").value),
+          ) &&
+          document.getElementById("password").value ===
+          document.getElementById("confirm").value &&
+          document.getElementById("terms").checked;document.getElementById("signup-btn").disabled = !ok;
+      }
+      const eyeOpen = `<ellipse cx="12" cy="12" rx="9" ry="5.5"/><circle cx="12" cy="12" r="2.2"/>`;
+      const eyeClosed = `<path d="M3 3l18 18M10.5 10.7a3 3 0 004 4"/><path d="M6.1 6.4A9.3 9.3 0 003 12c1.6 3 5 5.5 9 5.5a9 9 0 004.4-1.1M9.4 5.7A9 9 0 0121 12c-.5 1-1.2 2-2.1 2.8"/>`;
+
+      function toggleEye(inputId, btnId) {
+        const el = document.getElementById(inputId);
+        const btn = document.getElementById(btnId);
+        const isHidden = el.type === "password";
+        el.type = isHidden ? "text" : "password";
+        btn.querySelector("svg").innerHTML = isHidden ? eyeClosed : eyeOpen;
+      }
+
+      async function signup() {
+        const btn = document.getElementById("signup-btn");
+        btn.disabled = true;
+        btn.textContent = "Creating account…";
+
+        const payload = {
+          username: document.getElementById("username").value.trim(),
+          email: document.getElementById("email").value.trim(),
+          password: document.getElementById("password").value,
+          role: document.getElementById("role").value,
+          country: document.getElementById("country").value,
+          company: document.getElementById("company").value.trim(),
+        };
+
+        try {
+          const res = await fetch("http://127.0.0.1:8000/api/signup", {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+            const data = await res.json();
+
+            if (data.success) {
+              showToast(data.message, 'ok');
+              setTimeout(() => { window.location.href = 'login.html'; }, 1800);
+            } else {
+              showToast(data.message, 'err');
+              btn.disabled = false;
+              btn.textContent = 'Create Account';
+            }
+        } catch (e) {
+          showToast("Cannot reach server. Is it running?", "err");
+          btn.disabled = false;
+          btn.textContent = "Create Account";
+        }
+      }
+
+      function showToast(msg, type) {
+        let t = document.getElementById("toast");
+        if (!t) {
+          t = document.createElement("div");
+          t.id = "toast";
+          t.style.cssText = `
+          position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
+          padding:12px 24px;border-radius:10px;font-size:0.88rem;font-weight:500;
+          z-index:9999;transition:opacity 0.4s;pointer-events:none;
+          backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.12);
+          box-shadow:0 8px 32px rgba(0,0,0,0.4);
+        `;
+          document.body.appendChild(t);
+        }
+        t.textContent = msg;
+        t.style.background =
+          type === "ok" ? "rgba(34,197,94,0.18)" : "rgba(239,68,68,0.18)";
+        t.style.color = type === "ok" ? "#86efac" : "#f87171";
+        t.style.opacity = "1";
+        clearTimeout(t._to);
+        t._to = setTimeout(() => {
+          t.style.opacity = "0";
+        }, 3000);
+      }
+
+      function openTermsPopup(e) {
+        if(e) e.preventDefault();
+        document.getElementById('termsModal').classList.add('active');
+      }
+
+      function closeTermsPopup() {
+        document.getElementById('termsModal').classList.remove('active');
+      }
+
+      function acceptTerms() {
+        document.getElementById('terms').checked = true;
+        updateBtn();
+        closeTermsPopup();
+      }
+    </script>
+
+    <!-- Terms & Conditions Modal -->
+    <div class="modal-overlay" id="termsModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Terms & Conditions</h2>
+          <button class="modal-close" onclick="closeTermsPopup()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h3>1. Acceptance of Terms</h3>
+          <p>By registering for and utilizing the TrafficIQ Analytics Platform, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service. If you do not accept these terms in their entirety, you must not use our platform.</p>
+          
+          <h3>2. User Accounts and Security</h3>
+          <p>You are responsible for safeguarding the password that you use to access the service and for any activities or actions under your password. You agree not to disclose your password to any third party. TrafficIQ cannot and will not be liable for any loss or damage arising from your failure to comply with these security obligations.</p>
+          
+          <h3>3. Data Privacy and Analytics Processing</h3>
+          <p>TrafficIQ takes your data privacy seriously. All traffic datasets, analytical queries, and business intelligence reports generated through our platform remain your intellectual property. Our systems process your data solely for the purpose of delivering our analytics features. For more detailed information on how we collect, use, and protect your data, please refer to our full Privacy Policy.</p>
+          
+          <h3>4. Acceptable Use Policy</h3>
+          <p>When using our platform, you agree not to engage in any activity that interferes with or disrupts the services. This includes, but is not limited to: transmitting malicious code, attempting unauthorized access to other user accounts, performing reverse engineering on our algorithms, or using our systems to process illegal or unauthorized data.</p>
+          
+          <h3>5. Service Availability and Modifications</h3>
+          <p>While we strive to provide 99.9% uptime, TrafficIQ reserves the right to modify, suspend, or discontinue, temporarily or permanently, the service (or any part thereof) with or without notice. You agree that TrafficIQ will not be liable to you or to any third party for any modification, suspension, or discontinuance of the service.</p>
+
+          <h3>6. Limitation of Liability</h3>
+          <p>In no event shall TrafficIQ, its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the service.</p>
+
+          <h3>7. Governing Law</h3>
+          <p>These Terms shall be governed and construed in accordance with the laws of the jurisdiction in which TrafficIQ operates, without regard to its conflict of law provisions. Our failure to enforce any right or provision of these Terms will not be considered a waiver of those rights.</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-accept" onclick="acceptTerms()">I Accept</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

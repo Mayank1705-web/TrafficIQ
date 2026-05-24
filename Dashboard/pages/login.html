@@ -1,0 +1,807 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Login | TrafficIQ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --deep: #110825;
+        --mid: #1c0d3a;
+        --glass: rgba(255, 255, 255, 0.055);
+        --border: rgba(255, 255, 255, 0.1);
+        --input-bg: rgba(0, 0, 0, 0.3);
+        --input-bd: rgba(255, 255, 255, 0.13);
+        --focus-ring: rgba(160, 100, 255, 0.55);
+        --text: #ede8f8;
+        --muted: rgba(210, 195, 240, 0.55);
+        --accent: #c084fc;
+        --accent2: #38bdf8;
+        --btn-bg: rgba(120, 70, 200, 0.6);
+        --btn-hover: rgba(150, 90, 240, 0.8);
+        --link: #7dd3fc;
+      }
+
+      body {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--deep);
+        font-family: "DM Sans", sans-serif;
+        color: var(--text);
+        overflow: hidden;
+        position: relative;
+      }
+
+      #bg-canvas {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .mesh {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        background:
+          radial-gradient(
+            ellipse 60% 55% at 15% 15%,
+            rgba(120, 50, 200, 0.5) 0%,
+            transparent 70%
+          ),
+          radial-gradient(
+            ellipse 50% 45% at 85% 80%,
+            rgba(24, 140, 180, 0.4) 0%,
+            transparent 65%
+          ),
+          radial-gradient(
+            ellipse 40% 40% at 80% 15%,
+            rgba(180, 40, 110, 0.3) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse 35% 40% at 20% 85%,
+            rgba(80, 30, 160, 0.35) 0%,
+            transparent 60%
+          ),
+          var(--deep);
+        animation: meshShift 18s ease-in-out infinite alternate;
+      }
+      @keyframes meshShift {
+        0% {
+          filter: hue-rotate(0deg) brightness(1);
+        }
+        50% {
+          filter: hue-rotate(20deg) brightness(1.05);
+        }
+        100% {
+          filter: hue-rotate(-15deg) brightness(0.95);
+        }
+      }
+
+      .orb {
+        position: fixed;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 1;
+        animation: orbDrift var(--dur, 14s) ease-in-out infinite alternate;
+      }
+      .orb1 {
+        width: 420px;
+        height: 420px;
+        background: radial-gradient(
+          circle,
+          rgba(140, 60, 220, 0.5) 0%,
+          transparent 70%
+        );
+        top: -140px;
+        left: -100px;
+        --dur: 15s;
+        filter: blur(50px);
+      }
+      .orb2 {
+        width: 320px;
+        height: 320px;
+        background: radial-gradient(
+          circle,
+          rgba(20, 160, 200, 0.45) 0%,
+          transparent 70%
+        );
+        bottom: -100px;
+        right: -80px;
+        --dur: 11s;
+        filter: blur(45px);
+        animation-direction: alternate-reverse;
+      }
+      .orb3 {
+        width: 220px;
+        height: 220px;
+        background: radial-gradient(
+          circle,
+          rgba(200, 50, 120, 0.38) 0%,
+          transparent 70%
+        );
+        top: 55%;
+        left: 8%;
+        --dur: 17s;
+        filter: blur(40px);
+      }
+      .orb4 {
+        width: 180px;
+        height: 180px;
+        background: radial-gradient(
+          circle,
+          rgba(80, 200, 180, 0.3) 0%,
+          transparent 70%
+        );
+        top: 10%;
+        right: 12%;
+        --dur: 13s;
+        filter: blur(38px);
+        animation-direction: alternate-reverse;
+      }
+      @keyframes orbDrift {
+        from {
+          transform: translate(0, 0) scale(1);
+        }
+        to {
+          transform: translate(25px, 35px) scale(1.08);
+        }
+      }
+
+      .grid-overlay {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+        background-image:
+          linear-gradient(rgba(160, 120, 255, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(160, 120, 255, 0.04) 1px, transparent 1px);
+        background-size: 60px 60px;
+        mask-image: radial-gradient(
+          ellipse 70% 70% at 50% 50%,
+          black 0%,
+          transparent 100%
+        );
+      }
+
+      .card {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        max-width: 420px;
+        margin: 20px;
+        padding: 52px 44px 48px;
+        background: var(--glass);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        box-shadow:
+          0 32px 80px rgba(0, 0, 0, 0.6),
+          0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+          0 1px 0 rgba(255, 255, 255, 0.12) inset;
+        backdrop-filter: blur(28px) saturate(1.5);
+        -webkit-backdrop-filter: blur(28px) saturate(1.5);
+        animation: cardIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 24px;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.08) 0%,
+          transparent 45%,
+          transparent 55%,
+          rgba(255, 255, 255, 0.03) 100%
+        );
+        pointer-events: none;
+      }
+      .card::after {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        border-radius: 25px;
+        background: linear-gradient(
+          135deg,
+          rgba(190, 140, 255, 0.4),
+          rgba(56, 189, 248, 0.2),
+          rgba(190, 140, 255, 0),
+          rgba(56, 189, 248, 0.3)
+        );
+        z-index: -1;
+        animation: borderGlow 6s linear infinite;
+        background-size: 300% 300%;
+      }
+      @keyframes borderGlow {
+        0% {
+          background-position: 0% 50%;
+          opacity: 0.6;
+        }
+        50% {
+          background-position: 100% 50%;
+          opacity: 1;
+        }
+        100% {
+          background-position: 0% 50%;
+          opacity: 0.6;
+        }
+      }
+      @keyframes cardIn {
+        from {
+          opacity: 0;
+          transform: translateY(32px) scale(0.96);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      .logo-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 6px;
+        animation: fadeSlide 0.8s 0.1s both;
+      }
+
+      .logo-svg-wrap {
+        width: 46px;
+        height: 46px;
+        flex-shrink: 0;
+        filter: drop-shadow(0 0 10px rgba(192, 132, 252, 0.7))
+          drop-shadow(0 0 24px rgba(56, 189, 248, 0.4));
+        animation: logoGlow 3s ease-in-out infinite alternate;
+      }
+      @keyframes logoGlow {
+        0% {
+          filter: drop-shadow(0 0 6px rgba(192, 132, 252, 0.5))
+            drop-shadow(0 0 16px rgba(56, 189, 248, 0.2));
+        }
+        100% {
+          filter: drop-shadow(0 0 18px rgba(192, 132, 252, 1))
+            drop-shadow(0 0 36px rgba(56, 189, 248, 0.7));
+        }
+      }
+
+      .ring-outer {
+        animation: spinCW 7s linear infinite;
+        transform-origin: 18px 18px;
+      }
+      .ring-mid {
+        animation: spinCCW 5s linear infinite;
+        transform-origin: 18px 18px;
+      }
+      .ring-inner {
+        animation: spinCW 3s linear infinite;
+        transform-origin: 18px 18px;
+      }
+      .scanner {
+        animation: scanSweep 2.5s linear infinite;
+        transform-origin: 18px 18px;
+      }
+      .orbit-a {
+        animation: spinCW 2s linear infinite;
+        transform-origin: 18px 18px;
+      }
+      .orbit-b {
+        animation: spinCCW 3s linear infinite;
+        transform-origin: 18px 18px;
+      }
+      .orbit-c {
+        animation: spinCW 1.6s linear infinite;
+        transform-origin: 18px 18px;
+      }
+      .center-core {
+        animation: corePulse 2s ease-in-out infinite;
+        transform-origin: 18px 18px;
+      }
+      .cross {
+        animation: crossBlink 4s ease-in-out infinite alternate;
+      }
+
+      @keyframes spinCW {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes spinCCW {
+        to {
+          transform: rotate(-360deg);
+        }
+      }
+      @keyframes scanSweep {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes corePulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.5);
+          opacity: 0.65;
+        }
+      }
+      @keyframes crossBlink {
+        0% {
+          opacity: 0.2;
+        }
+        100% {
+          opacity: 0.5;
+        }
+      }
+
+      .logo-text {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.65rem;
+        font-weight: 900;
+        letter-spacing: 0.06em;
+        background: linear-gradient(
+          90deg,
+          #c084fc 0%,
+          #38bdf8 60%,
+          #c084fc 100%
+        );
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: shimmer 4s linear infinite;
+      }
+      @keyframes shimmer {
+        from {
+          background-position: 0% center;
+        }
+        to {
+          background-position: 200% center;
+        }
+      }
+
+      .tagline {
+        text-align: center;
+        font-size: 0.72rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 36px;
+        animation: fadeSlide 0.8s 0.2s both;
+      }
+      .login-heading {
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        text-align: center;
+        color: var(--text);
+        margin-bottom: 26px;
+        opacity: 0.8;
+        animation: fadeSlide 0.8s 0.25s both;
+      }
+
+      .field {
+        position: relative;
+        margin-bottom: 14px;
+        animation: fadeSlide 0.7s both;
+      }
+      .field:nth-child(1) {
+        animation-delay: 0.3s;
+      }
+      .field:nth-child(2) {
+        animation-delay: 0.38s;
+      }
+      .field-icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 16px;
+        height: 16px;
+        opacity: 0.45;
+        pointer-events: none;
+        transition: opacity 0.2s;
+      }
+      .field input {
+        width: 100%;
+        padding: 13px 16px 13px 40px;
+        background: var(--input-bg);
+        border: 1px solid var(--input-bd);
+        border-radius: 10px;
+        color: var(--text);
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.92rem;
+        font-weight: 300;
+        letter-spacing: 0.02em;
+        outline: none;
+        transition:
+          border-color 0.25s,
+          box-shadow 0.25s,
+          background 0.25s;
+      }
+      .field input::placeholder {
+        color: var(--muted);
+      }
+      .field input:focus {
+        border-color: var(--focus-ring);
+        background: rgba(0, 0, 0, 0.42);
+        box-shadow:
+          0 0 0 3px rgba(160, 100, 255, 0.18),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      }
+      .field:focus-within .field-icon {
+        opacity: 0.85;
+      }
+
+      .btn-wrap {
+        display: flex;
+        justify-content: center;
+        margin-top: 26px;
+        animation: fadeSlide 0.7s 0.46s both;
+      }
+      .btn {
+        position: relative;
+        padding: 12px 44px;
+        background: var(--btn-bg);
+        border: 1px solid rgba(180, 140, 255, 0.28);
+        border-radius: 10px;
+        color: var(--text);
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        cursor: pointer;
+        overflow: hidden;
+        transition:
+          background 0.25s,
+          box-shadow 0.25s,
+          transform 0.15s,
+          border-color 0.25s;
+      }
+      .btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 70%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.12),
+          transparent
+        );
+        transform: skewX(-20deg);
+        transition: left 0.45s ease;
+      }
+      .btn:hover {
+        background: var(--btn-hover);
+        border-color: rgba(190, 140, 255, 0.55);
+        box-shadow:
+          0 0 28px rgba(160, 100, 255, 0.4),
+          0 0 60px rgba(160, 100, 255, 0.15);
+        transform: translateY(-2px);
+      }
+      .btn:hover::before {
+        left: 140%;
+      }
+      .btn:active {
+        transform: translateY(0);
+        box-shadow: none;
+      }
+
+      .error-msg {
+        display: none;
+        text-align: center;
+        margin-top: 14px;
+        font-size: 0.83rem;
+        color: #f87171;
+        animation: fadeSlide 0.3s both;
+      }
+
+      .divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 28px 0 0;
+        animation: fadeSlide 0.7s 0.52s both;
+      }
+      .divider span {
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+      .divider p {
+        font-size: 0.75rem;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 0.82rem;
+        color: var(--muted);
+        font-weight: 300;
+        animation: fadeSlide 0.7s 0.58s both;
+      }
+      .footer a {
+        color: var(--link);
+        text-decoration: none;
+        font-weight: 500;
+        transition:
+          color 0.2s,
+          text-shadow 0.2s;
+      }
+      .footer a:hover {
+        color: #bae6fd;
+        text-shadow: 0 0 12px rgba(56, 189, 248, 0.55);
+      }
+
+      .status-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        margin-bottom: 30px;
+        animation: fadeSlide 0.7s 0.15s both;
+      }
+      .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        animation: pulse 2.5s ease-in-out infinite;
+      }
+      .dot1 {
+        background: #a78bfa;
+        animation-delay: 0s;
+      }
+      .dot2 {
+        background: #38bdf8;
+        animation-delay: 0.35s;
+      }
+      .dot3 {
+        background: #c084fc;
+        animation-delay: 0.7s;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.35;
+          transform: scale(0.85);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.15);
+        }
+      }
+      @keyframes fadeSlide {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="mesh"></div>
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+    <div class="orb orb4"></div>
+    <div class="grid-overlay"></div>
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="card">
+      <div class="logo-wrap">
+        <div class="logo-svg-wrap"><i class="fa-solid fa-chart-simple"></i></div>
+        <span class="logo-text">TrafficIQ</span>
+      </div>
+
+      <p class="tagline">Intelligent Traffic Intelligence</p>
+
+      <div class="status-row">
+        <div class="dot dot1"></div>
+        <div class="dot dot2"></div>
+        <div class="dot dot3"></div>
+      </div>
+
+      <p class="login-heading">Sign In</p>
+
+      <div class="field">
+        <input
+          id="username"
+          type="text"
+          placeholder="Username"
+          autocomplete="username"
+        />
+        <svg class="field-icon" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="5.5" r="2.5" stroke="#c084fc" stroke-width="1.2" />
+          <path
+            d="M2 13.5c0-3 2.5-5 6-5s6 2 6 5"
+            stroke="#c084fc"
+            stroke-width="1.2"
+            stroke-linecap="round"
+          />
+        </svg>
+      </div>
+
+      <div class="field">
+        <input
+          id="password"
+          type="password"
+          placeholder="Password"
+          autocomplete="current-password"
+        />
+        <svg class="field-icon" viewBox="0 0 16 16" fill="none">
+          <rect
+            x="3"
+            y="7"
+            width="10"
+            height="7"
+            rx="1.5"
+            stroke="#c084fc"
+            stroke-width="1.2"
+          />
+          <path
+            d="M5 7V5a3 3 0 0 1 6 0v2"
+            stroke="#c084fc"
+            stroke-width="1.2"
+            stroke-linecap="round"
+          />
+          <circle cx="8" cy="10.5" r="1" fill="#c084fc" />
+        </svg>
+      </div>
+
+      <div class="btn-wrap">
+        <button class="btn" id="loginBtn" onclick="login()">Login</button>
+      </div>
+
+      <p class="error-msg" id="errorMsg"></p>
+
+      <div class="divider">
+        <span></span>
+        <p>New to TrafficIQ?</p>
+        <span></span>
+      </div>
+
+      <p class="footer"><a href="signup.html">Create an account</a></p>
+    </div>
+
+    <script>
+      const canvas = document.getElementById("bg-canvas");
+      const ctx = canvas.getContext("2d");
+      let W,
+        H,
+        particles = [];
+      function resize() {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      }
+      class Particle {
+        constructor() {
+          this.reset(true);
+        }
+        reset(init) {
+          this.x = Math.random() * W;
+          this.y = init ? Math.random() * H : H + 10;
+          this.r = Math.random() * 1.2 + 0.3;
+          this.vy = -(Math.random() * 0.4 + 0.15);
+          this.vx = (Math.random() - 0.5) * 0.2;
+          this.a = 0;
+          this.ta = Math.random() * 0.55 + 0.1;
+          this.color = Math.random() < 0.55 ? "#c084fc" : "#38bdf8";
+        }
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+          this.a += (this.ta - this.a) * 0.02;
+          if (this.y < -10) this.reset(false);
+        }
+        draw() {
+          ctx.globalAlpha = this.a * 0.65;
+          ctx.fillStyle = this.color;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      function init() {
+        resize();
+        particles = Array.from({ length: 90 }, () => new Particle());
+      }
+      function loop() {
+        ctx.clearRect(0, 0, W, H);
+        particles.forEach((p) => {
+          p.update();
+          p.draw();
+        });
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(loop);
+      }
+      window.addEventListener("resize", resize);
+      init();
+      loop();
+    </script>
+
+    <script>
+      // If already logged in, skip straight to dashboard
+      async function login() {
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value;
+        const btn = document.getElementById("loginBtn");
+        const errorMsg = document.getElementById("errorMsg");
+
+        if (!username || !password) {
+          errorMsg.textContent = "Please enter username and password.";
+          errorMsg.style.display = "block";
+          return;
+        }
+
+        btn.textContent = "Signing in...";
+        btn.disabled = true;
+        errorMsg.style.display = "none";
+
+        try {
+          const res = await fetch("http://127.0.0.1:8000/api/login", {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password }),
+          });
+
+          const data = await res.json();
+
+          if (data.success) {
+            window.location.replace("index.html");
+          } else {
+            errorMsg.textContent =
+              data.message || "Login failed. Please try again.";
+            errorMsg.style.display = "block";
+            btn.textContent = "Login";
+            btn.disabled = false;
+          }
+        } catch (err) {
+          errorMsg.textContent = "Server error. Please try again.";
+          errorMsg.style.display = "block";
+          btn.textContent = "Login";
+          btn.disabled = false;
+        }
+      }
+      // Allow pressing Enter to submit
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") login();
+      });
+    </script>
+  </body>
+</html>

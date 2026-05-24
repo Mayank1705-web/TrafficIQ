@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TrafficIQ - Load Intelligence</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/js/auth.js"></script>
+    <script src="/js/common.js"></script>
+  <script src="/js/theme.js"></script>
+</head>
+
+<body>
+  <div class="dashboard">
+    <aside class="sidebar">
+            <div class="logo">
+        <div class="logo-icon"><i class="fa-solid fa-chart-simple"></i></div>
+        <div>
+          <h2>TrafficIQ</h2>
+          <p>Analytics Platform</p>
+        </div>
+      </div>
+
+      <nav>
+        <ul>
+          <li>
+            <a href="index.html">
+              <i class="fa-solid fa-chart-line"></i> Dashboard
+            </a>
+          </li>
+
+          <li>
+            <a href="traffic.html">
+              <i class="fa-solid fa-arrow-trend-up"></i> Traffic Intelligence
+            </a>
+          </li>
+
+          <li class="active">
+            <a href="load.html">
+              <i class="fa-solid fa-server"></i> Load Intelligence
+            </a>
+          </li>
+
+          <li>
+            <a href="ads.html">
+              <i class="fa-solid fa-bullhorn"></i> Ad Analytics
+            </a>
+          </li>
+
+          <li>
+            <a href="users.html">
+              <i class="fa-solid fa-users"></i> User Behavior
+            </a>
+          </li>
+
+          <li>
+            <a href="security.html">
+              <i class="fa-solid fa-shield-halved"></i> Security Logs
+            </a>
+          </li>
+
+          <li>
+            <a href="configuration.html">
+              <i class="fa-solid fa-gear"></i> Configuration
+            </a>
+          </li>
+          <li><a href="reports.html"><i class="fa-solid fa-file-pdf"></i> Business Report</a></li>
+          <li><a href="about.html"><i class="fa-solid fa-address-card"></i> About Us</a></li>
+        </ul>
+      </nav>
+
+      <div class="status">
+        <p class="status-title">SYSTEM STATUS</p>
+        <p class="status-green">All Systems Operational</p>
+        <button onClick="logout()" class="logout-radial">
+          <span>
+            <i class="fa-solid fa-right-from-bracket"></i>
+            Logout
+          </span>
+        </button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="hero-blue">
+        <div class="hero-left">
+          <div class="hero-main-icon">
+            <i class="fa-solid fa-server"></i>
+          </div>
+          <div class="hero-text">
+            <h1>Load Intelligence</h1>
+            <p>Server performance and scaling insights</p>
+          </div>
+        </div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+          <button id="themeToggle" onclick="toggleTheme(event)" style="padding: 10px 15px; border-radius: 12px; border: none; cursor: pointer; background: rgba(255,255,255,0.2); color: white; font-weight: 600; transition: 0.3s; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-moon theme-icon-toggle"></i> Theme
+          </button>
+          <div class="live-box">
+          <span class="live-dot"></span>
+          LIVE NOW
+          <h3 id="clock"></h3>
+        </div>
+        </div>
+      </header>
+
+      <div class="middle-wrapper is-loading">
+        <!-- Loading Overlay -->
+        <div id="loader" class="loader-overlay">
+          <div class="loading-animation">
+            <div class="loading-bar"></div>
+            <div class="loading-bar"></div>
+            <div class="loading-bar"></div>
+            <div class="loading-bar"></div>
+            <div class="loading-bar"></div>
+          </div>
+          <div class="loader-text">Processing Load Intelligence...</div>
+        </div>
+
+        <div class="content-to-blur">
+
+      <section class="stats-grid">
+        <article class="stat-card glow-purple">
+          <div class="stat-top">
+            <div class="stat-icon purple">
+              <i class="ri-cpu-line"></i>
+            </div>
+          </div>
+          <p class="stat-label">Avg. CPU Usage</p>
+          <h3 id="cpu" class="stat-value purple-text">--</h3>
+        </article>
+
+        <article class="stat-card glow-blue">
+          <div class="stat-top">
+            <div class="stat-icon blue">
+              <i class="ri-hard-drive-3-line"></i>
+            </div>
+          </div>
+          <p class="stat-label">Memory Usage</p>
+          <h3 id="memory" class="stat-value blue-text">--</h3>
+        </article>
+
+        <article class="stat-card glow-orange">
+          <div class="stat-top">
+            <div class="stat-icon orange">
+              <i class="ri-flashlight-line"></i>
+            </div>
+          </div>
+          <p class="stat-label">Avg. Response Time</p>
+          <h3 id="response" class="stat-value orange-text">--</h3>
+        </article>
+
+        <article class="stat-card glow-green">
+          <div class="stat-top">
+            <div class="stat-icon green">
+              <i class="ri-error-warning-line"></i>
+            </div>
+          </div>
+          <p class="stat-label">Error Rate</p>
+          <h3 id="error" class="stat-value green-text">--</h3>
+        </article>
+      </section>
+
+      <section class="charts-grid">
+        <article class="chart-card chart-purple">
+          <div class="chart-header">
+            <h4>Server Resource Usage</h4>
+            <div class="chart-icon chart-purple">
+              <i class="ri-pulse-line"></i>
+            </div>
+          </div>
+
+          <div class="chart-wrap">
+            <canvas id="loadHourChart"></canvas>
+          </div>
+        </article>
+
+        <article class="chart-card chart-orange">
+          <div class="chart-header">
+            <h4>Request Rate & Errors</h4>
+            <div class="chart-icon chart-orange">
+              <i class="ri-flashlight-line"></i>
+            </div>
+          </div>
+
+          <div class="chart-wrap">
+            <canvas id="requestChart"></canvas>
+          </div>
+
+          <div class="chart-legend"></div>
+        </article>
+      </section>
+      <section class="charts-grid second-row">
+        <!-- API RESPONSE TIMES -->
+        <article class="chart-card chart-blue">
+          <div class="chart-header">
+            <h4>API Response Times</h4>
+            <div class="chart-icon chart-blue">
+              <i class="ri-server-line"></i>
+            </div>
+          </div>
+
+          <div class="chart-wrap">
+            <canvas id="responseChart"></canvas>
+          </div>
+
+          <!-- legend -->
+          <div class="api-legend"></div>
+        </article>
+
+        <!-- SCALING RECOMMENDATIONS -->
+        <article class="chart-card chart-green">
+          <div class="chart-header">
+            <h4>Scaling Recommendations</h4>
+            <div class="chart-icon chart-green">
+              <i class="ri-pulse-line"></i>
+            </div>
+          </div>
+
+          <div class="chart-wrap">
+            <canvas id="endpointChart"></canvas>
+          </div>
+        </article>
+        </div>
+      </div>
+
+      <footer class="dashboard-footer">
+        <p>TrafficIQ Analytics Platform | MediCaps University</p>
+        <span>© 2026 All Rights Reserved</span>
+      </footer>
+    </main>
+  </div>
+  <script src="/js/load_chart.js"></script>
+  <script src="/js/config.js"></script>
+  <script>
+    function updateClock() {
+      const clockElement = document.getElementById("clock");
+      if (clockElement) {
+        clockElement.innerHTML = new Date().toLocaleTimeString();
+      }
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    document.addEventListener("DOMContentLoaded", () => {
+      checkAuth();
+    });
+  </script>
+</body>
+
+</html>

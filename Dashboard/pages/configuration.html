@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Configuration | TrafficIQ</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="/js/theme.js"></script>
+</head>
+
+  <body class="page-config">
+    <div class="dashboard">
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+              <div class="logo">
+        <div class="logo-icon"><i class="fa-solid fa-chart-simple"></i></div>
+        <div>
+          <h2>TrafficIQ</h2>
+          <p>Analytics Platform</p>
+        </div>
+      </div>
+
+        <nav>
+          <ul>
+            <li>
+              <a href="index.html"
+                ><i class="fa-solid fa-chart-line"></i> Dashboard</a
+              >
+            </li>
+            <li>
+              <a href="traffic.html"
+                ><i class="fa-solid fa-arrow-trend-up"></i> Traffic
+                Intelligence</a
+              >
+            </li>
+            <li>
+              <a href="load.html"
+                ><i class="fa-solid fa-server"></i> Load Intelligence</a
+              >
+            </li>
+            <li>
+              <a href="ads.html"
+                ><i class="fa-solid fa-bullhorn"></i> Ad Analytics</a
+              >
+            </li>
+            <li>
+              <a href="users.html"
+                ><i class="fa-solid fa-users"></i> User Behavior</a
+              >
+            </li>
+            <li>
+              <a href="security.html"
+                ><i class="fa-solid fa-shield-halved"></i> Security Logs</a
+              >
+            </li>
+            <li class="active">
+              <a href="configuration.html"
+                ><i class="fa-solid fa-gear"></i> Configuration</a
+              >
+            </li>
+            <li>
+              <a href="reports.html">
+                <i class="fa-solid fa-file-pdf"></i> Business Report
+              </a>
+            </li>
+            <li>
+              <a href="about.html">
+                <i class="fa-solid fa-address-card"></i> About Us
+              </a>
+            </li>
+        </ul>
+        </nav>
+
+        <div class="status">
+          <p class="status-title">SYSTEM STATUS</p>
+          <p class="status-green">Loading...</p>
+          <button onclick="logout()" class="logout-radial">
+            <span>
+              <i class="fa-solid fa-right-from-bracket"></i>
+              Logout
+            </span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- MAIN -->
+      <main class="main">
+        <!-- HEADER -->
+        <header class="hero-dark">
+          <div class="hero-left">
+            <div class="hero-main-icon">
+              <i class="fa-solid fa-gear"></i>
+            </div>
+            <div class="hero-text">
+              <h1>Data Analysis Configuration</h1>
+              <p>Configure data sources and trigger analytics pipeline</p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 15px; align-items: center;">
+          <button id="themeToggle" onclick="toggleTheme(event)" style="padding: 10px 15px; border-radius: 12px; border: none; cursor: pointer; background: rgba(255,255,255,0.2); color: white; font-weight: 600; transition: 0.3s; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-moon theme-icon-toggle"></i> Theme
+          </button>
+          <div class="live-box">
+            <span class="live-dot"></span>
+            LIVE NOW
+            <h3 id="clock"></h3>
+          </div>
+        </div>
+        </header>
+
+        <!-- DATASET CONFIG -->
+        <section class="dataset-card">
+          <div class="dataset-header">
+            <div class="dataset-icon">
+              <i class="fa-solid fa-folder-open"></i>
+            </div>
+            <h2>Dataset Configuration</h2>
+          </div>
+
+          <label class="dataset-label">Dataset Folder Path</label>
+
+          <div class="dataset-input">
+            <i class="fa-solid fa-database"></i>
+            <input
+              type="text"
+              id="datasetPath"
+              placeholder="/path/to/datasets"
+            />
+          </div>
+
+          <p class="dataset-help">
+            Provide the absolute path to datasets (CSV, JSON, etc.)
+          </p>
+
+          <button class="pipeline-btn">
+            <i class="fa-solid fa-play"></i> Run Analytics Pipeline
+          </button>
+        </section>
+
+    <!-- HISTORY -->
+    <section class="chart-card history-card">
+      <div class="chart-header">
+        <h3 class="history-title">Recent Processing History</h3>
+        <div class="chart-icon" style="background: linear-gradient(135deg, #1e293b, #0f172a);">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+        </div>
+      </div>
+
+      <div id="historyContainer" style="max-height: 400px; overflow-y: auto;">
+
+        <div class="history-row">
+          <div class="history-left">
+            <div class="history-icon">
+              <i class="fa-solid fa-file-csv"></i>
+            </div>
+            <div>
+              <strong>/datasets/traffic.csv</strong>
+              <p style="font-size:13px; color:#64748b;">23,995 records processed</p>
+            </div>
+          </div>
+          <div class="history-right">
+            <p style="font-size:13px; color:#64748b;">2 mins ago</p>
+            <p class="complete"><i class="fa-solid fa-circle-check"></i> Complete</p>
+          </div>
+        </div>
+
+        <div class="history-row">
+          <div class="history-left">
+            <div class="history-icon">
+              <i class="fa-solid fa-file-code"></i>
+            </div>
+            <div>
+              <strong>/datasets/ads.json</strong>
+              <p style="font-size:13px; color:#64748b;">8,412 records processed</p>
+            </div>
+          </div>
+          <div class="history-right">
+            <p style="font-size:13px; color:#64748b;">15 mins ago</p>
+            <p class="complete"><i class="fa-solid fa-circle-check"></i> Complete</p>
+          </div>
+        </div>
+
+        <div class="history-row">
+          <div class="history-left">
+            <div class="history-icon">
+              <i class="fa-solid fa-file-csv"></i>
+            </div>
+            <div>
+              <strong>/datasets/users.csv</strong>
+              <p style="font-size:13px; color:#64748b;">15,230 records processed</p>
+            </div>
+          </div>
+          <div class="history-right">
+            <p style="font-size:13px; color:#64748b;">1 hr ago</p>
+            <p class="complete"><i class="fa-solid fa-circle-check"></i> Complete</p>
+          </div>
+        </div>
+
+        <div class="history-row">
+          <div class="history-left">
+            <div class="history-icon">
+              <i class="fa-solid fa-file-code"></i>
+            </div>
+            <div>
+              <strong>/datasets/security.json</strong>
+              <p style="font-size:13px; color:#64748b;">4,801 records processed</p>
+            </div>
+          </div>
+          <div class="history-right">
+            <p style="font-size:13px; color:#64748b;">3 hrs ago</p>
+            <p class="complete"><i class="fa-solid fa-circle-check"></i> Complete</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+        <footer class="dashboard-footer">
+          <p>TrafficIQ Analytics Platform | MediCaps University</p>
+          <span>© 2026 All Rights Reserved</span>
+        </footer>
+      </main>
+    </div>
+    <script src="/js/config.js"></script>
+
+    <script>
+      function updateClock() {
+        const clockElement = document.getElementById("clock");
+        if (clockElement) {
+          clockElement.innerHTML = new Date().toLocaleTimeString();
+        }
+      }
+      setInterval(updateClock, 1000);
+      updateClock();
+
+      document.addEventListener("DOMContentLoaded", () => {
+        checkAuth();
+        
+    });
+    </script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/common.js"></script>
+  </body>
+</html>

@@ -1,0 +1,268 @@
+.login-box h1 {
+  margin-bottom: 6px !important;
+}
+
+/* ── Tagline ── */
+.tagline {
+  text-align: center;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 28px;
+  animation: fadeSlide 0.8s 0.18s both;
+}
+
+/* ── Logo row ── */
+.logo-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 4px;
+  animation: fadeSlide 0.8s 0.1s both;
+}
+
+/* ── Field wrapper (icon + input + eye toggle) ── */
+.field {
+  position: relative;
+  margin-bottom: 13px;
+}
+
+.field:nth-child(1) { animation: fadeSlide 0.7s 0.28s both; }
+.field:nth-child(2) { animation: fadeSlide 0.7s 0.34s both; }
+.field:nth-child(3) { animation: fadeSlide 0.7s 0.40s both; }
+.field:nth-child(4) { animation: fadeSlide 0.7s 0.46s both; }
+
+.field input {
+  padding-left: 42px !important;
+}
+
+/* ── Field icon ── */
+.field-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  opacity: 0.42;
+  transition: opacity 0.2s;
+  width: 16px;
+  height: 16px;
+}
+
+.field:focus-within .field-icon {
+  opacity: 0.9;
+}
+
+/* ── Eye toggle button ── */
+.eye-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  margin: 0 !important;
+  width: auto !important;
+  transition: color 0.2s;
+  animation: none !important;
+  box-shadow: none !important;
+}
+
+.eye-btn:hover {
+  color: var(--text);
+  background: none !important;
+  transform: translateY(-50%) !important;
+  box-shadow: none !important;
+}
+
+/* ── Password strength bar ── */
+.strength-wrap {
+  margin: -6px 0 10px;
+  animation: fadeSlide 0.5s 0.50s both;
+}
+
+.strength-track {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.strength-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 99px;
+  background: #ef4444;
+  transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1), background 0.3s;
+}
+
+.strength-label {
+  font-size: 0.70rem;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 5px;
+  height: 12px;
+  transition: color 0.3s;
+}
+
+/* ── Password requirements checklist ── */
+.req-list {
+  margin: 0 0 14px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px 12px;
+  animation: fadeSlide 0.5s 0.55s both;
+}
+
+.req {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  color: var(--muted);
+  transition: color 0.25s;
+}
+
+.req svg {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  opacity: 0.35;
+  transition: opacity 0.25s;
+}
+
+.req.met {
+  color: #86efac;
+}
+
+.req.met svg {
+  opacity: 1;
+}
+
+/* ── Confirm password match hint ── */
+.match-hint {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  margin: -8px 0 10px 2px;
+  height: 14px;
+  opacity: 0;
+  transition: color 0.25s, opacity 0.25s;
+}
+
+.match-hint.show { opacity: 1; }
+.match-hint.ok   { color: #86efac; }
+.match-hint.bad  { color: #f87171; }
+
+/* ── Terms of service row ── */
+.terms-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 4px 0 18px;
+  animation: fadeSlide 0.7s 0.60s both;
+}
+
+.terms-row input[type="checkbox"] {
+  width: 16px !important;
+  height: 16px !important;
+  min-width: 16px;
+  padding: 0 !important;
+  margin: 2px 0 0 !important;
+  accent-color: #a78bfa;
+  cursor: pointer;
+  animation: none !important;
+}
+
+.terms-row label {
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.5;
+  cursor: pointer;
+  user-select: none;
+}
+
+.terms-row label a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+.terms-row label a:hover {
+  text-decoration: underline;
+}
+
+/* ── Button disabled state ── */
+.login-box button:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.login-box button:disabled::before {
+  display: none;
+}
+
+/* ── Button wrapper ── */
+.btn-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 4px;
+  animation: fadeSlide 0.7s 0.64s both;
+}
+
+/* ── Footer link ── */
+.footer-link {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-weight: 300;
+  animation: fadeSlide 0.7s 0.70s both;
+}
+
+.footer-link a {
+  color: var(--link);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s, text-shadow 0.2s;
+}
+
+.footer-link a:hover {
+  color: #bae6fd;
+  text-shadow: 0 0 12px rgba(56, 189, 248, 0.55);
+}
+
+/* ── Success toast notification ── */
+.toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-80px);
+  background: rgba(22, 163, 74, 0.18);
+  border: 1px solid rgba(134, 239, 172, 0.35);
+  color: #86efac;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.05em;
+  padding: 10px 22px;
+  border-radius: 99px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 999;
+  opacity: 0;
+  white-space: nowrap;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s;
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}

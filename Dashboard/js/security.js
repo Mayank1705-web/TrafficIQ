@@ -1,0 +1,1 @@
+// Deprecated. Auth is now handled by auth.js

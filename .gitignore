@@ -1,0 +1,8 @@
+.idea/
+.venv/
+Scripts/__pycache__/
+Scripts/TraffiIQ_env/
+Data/Raw/
+Data/Processed/
+*.pyc
+.gitignore

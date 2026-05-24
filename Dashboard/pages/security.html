@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Security Logs | TrafficIQ</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/common.js"></script>
+    <script src="/js/theme.js"></script>
+</head>
+
+  <body class="page-security">
+    <div class="dashboard">
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+              <div class="logo">
+        <div class="logo-icon"><i class="fa-solid fa-chart-simple"></i></div>
+        <div>
+          <h2>TrafficIQ</h2>
+          <p>Analytics Platform</p>
+        </div>
+      </div>
+
+        <nav>
+          <ul>
+            <li>
+              <a href="index.html"
+                ><i class="fa-solid fa-chart-line"></i> Dashboard</a
+              >
+            </li>
+            <li>
+              <a href="traffic.html"
+                ><i class="fa-solid fa-arrow-trend-up"></i> Traffic
+                Intelligence</a
+              >
+            </li>
+            <li>
+              <a href="load.html"
+                ><i class="fa-solid fa-server"></i> Load Intelligence</a
+              >
+            </li>
+            <li>
+              <a href="ads.html"
+                ><i class="fa-solid fa-bullhorn"></i> Ad Analytics</a
+              >
+            </li>
+            <li>
+              <a href="users.html"
+                ><i class="fa-solid fa-users"></i> User Behavior</a
+              >
+            </li>
+            <li class="active">
+              <a href="security.html"
+                ><i class="fa-solid fa-shield-halved"></i> Security Logs</a
+              >
+            </li>
+            <li>
+              <a href="configuration.html"
+                ><i class="fa-solid fa-gear"></i> Configuration</a
+              >
+            </li>
+            <li>
+              <a href="reports.html">
+                <i class="fa-solid fa-file-pdf"></i> Business Report
+              </a>
+            </li>
+            <li>
+              <a href="about.html">
+                <i class="fa-solid fa-address-card"></i> About Us
+              </a>
+            </li>
+        </ul>
+        </nav>
+
+        <div class="status">
+          <p class="status-title">SYSTEM STATUS</p>
+          <p class="status-green">All Systems Operational</p>
+          <button onclick="logout()" class="logout-radial">
+            <span>
+              <i class="fa-solid fa-right-from-bracket"></i>
+              Logout
+            </span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- MAIN -->
+      <main class="main">
+        <!-- HERO -->
+        <header class="hero-red">
+          <div class="hero-left">
+            <div class="hero-main-icon">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div class="hero-text">
+              <h1>Security Log Intelligence</h1>
+              <p>Threat detection and security monitoring</p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 15px; align-items: center;">
+          <button id="themeToggle" onclick="toggleTheme(event)" style="padding: 10px 15px; border-radius: 12px; border: none; cursor: pointer; background: rgba(255,255,255,0.2); color: white; font-weight: 600; transition: 0.3s; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-moon theme-icon-toggle"></i> Theme
+          </button>
+          <div class="live-box">
+            <span class="live-dot"></span>
+            LIVE NOW
+            <h3 id="clock"></h3>
+          </div>
+        </div>
+        </header>
+
+        <div class="middle-wrapper is-loading">
+          <!-- Loading Overlay -->
+          <div id="loader" class="loader-overlay">
+            <div class="loading-animation">
+              <div class="loading-bar"></div>
+              <div class="loading-bar"></div>
+              <div class="loading-bar"></div>
+              <div class="loading-bar"></div>
+              <div class="loading-bar"></div>
+            </div>
+            <div class="loader-text">Verifying Security Logs...</div>
+          </div>
+
+          <div class="content-to-blur">
+
+        <!-- KPI -->
+        <section class="cards">
+          <div class="card metric-card">
+            <h3>Security Score</h3>
+            <h1 id="score" class="metric-value green-text">--</h1>
+          </div>
+
+          <div class="card metric-card">
+            <h3>Threats Blocked</h3>
+            <h1 id="threats" class="metric-value orange-text">--</h1>
+          </div>
+
+          <div class="card metric-card">
+            <h3>Firewall Status</h3>
+            <h1 id="firewall" class="metric-value blue-text">--</h1>
+          </div>
+
+          <div class="card metric-card">
+            <h3>Critical Alerts</h3>
+            <h1 id="alerts" class="metric-value purple-text">--</h1>
+          </div>
+        </section>
+
+        <!-- CHARTS -->
+        <section class="charts">
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3 class="chart-title-red">Threat Timeline</h3>
+              <div class="chart-icon chart-red">
+                <i class="fa-solid fa-timeline"></i>
+              </div>
+            </div>
+            <div class="chart-wrap">
+              <!-- ← this is missing -->
+              <canvas id="timelineChart"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3 class="chart-title-red">Status Codes</h3>
+              <div class="chart-icon chart-orange">
+                <i class="fa-solid fa-code"></i>
+              </div>
+            </div>
+            <div class="chart-wrap">
+              <!-- ← this is missing -->
+              <canvas id="statusChart"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <section class="charts">
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3 class="chart-title-red">Error Trend</h3>
+              <div class="chart-icon chart-blue">
+                <i class="fa-solid fa-arrow-trend-down"></i>
+              </div>
+            </div>
+            <div class="chart-wrap">
+              <!-- ← this is missing -->
+              <canvas id="errorChart"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3 class="chart-title-red">Attack Types</h3>
+              <div class="chart-icon chart-purple">
+                <i class="fa-solid fa-skull-crossbones"></i>
+              </div>
+            </div>
+            <div class="chart-wrap">
+              <!-- ← this is missing -->
+              <canvas id="attackChart"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- DYNAMIC ACTIVITY LOG -->
+        <section class="chart-card funnel-card">
+          <div class="chart-header">
+            <h3 class="chart-title-red">Suspicious Activity Log</h3>
+            <div class="chart-icon chart-red">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+          </div>
+
+          <div
+            id="activityContainer"
+            style="max-height: 400px; overflow-y: auto"
+          ></div>
+          </div>
+        </div>
+
+        <footer class="dashboard-footer">
+          <p>TrafficIQ Analytics Platform | MediCaps University</p>
+          <span>© 2026 All Rights Reserved</span>
+        </footer>
+      </main>
+    </div>
+
+    <!-- CORRECT JS -->
+    <script src="/js/security_charts.js"></script>
+    <script src="/js/config.js"></script>
+    <script>
+      function updateClock() {
+        const clockElement = document.getElementById("clock");
+        if (clockElement) {
+          clockElement.innerHTML = new Date().toLocaleTimeString();
+        }
+      }
+      setInterval(updateClock, 1000);
+      updateClock();
+
+      document.addEventListener("DOMContentLoaded", () => {
+        checkAuth();
+      });
+    </script>
+  </body>
+</html>

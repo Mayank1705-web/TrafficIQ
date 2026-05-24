@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Business Report | TrafficIQ</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="/js/auth.js"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/common.js"></script>
+  <style>
+    /* ── KPI Scorecards ── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+    .kpi-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .kpi-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(124,58,237,0.15);
+    }
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--kpi-color, linear-gradient(90deg, #7c3aed, #ec4899));
+    }
+    .kpi-icon { font-size: 22px; margin-bottom: 8px; }
+    .kpi-value {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-color);
+      line-height: 1.1;
+    }
+    .kpi-label {
+      font-size: 11px;
+      color: var(--muted-color, #94a3b8);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 4px;
+    }
+
+    /* ── Report Card ── */
+    .report-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+      margin-bottom: 24px;
+      border: 1px solid var(--border-color);
+      animation: fadeInUp 0.4s ease both;
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .report-card:nth-child(2) { animation-delay: 0.05s; }
+    .report-card:nth-child(3) { animation-delay: 0.10s; }
+    .report-card:nth-child(4) { animation-delay: 0.15s; }
+    .report-card:nth-child(5) { animation-delay: 0.20s; }
+    .report-card:nth-child(6) { animation-delay: 0.25s; }
+    .report-card:nth-child(7) { animation-delay: 0.30s; }
+    .report-card:nth-child(8) { animation-delay: 0.35s; }
+
+    /* ── Section Header ── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .section-icon {
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-color);
+    }
+    .section-subtitle {
+      font-size: 13px;
+      color: var(--muted-color, #94a3b8);
+      margin-top: 2px;
+    }
+
+    /* ── Body Text ── */
+    .section-body {
+      color: var(--text-color);
+      font-size: 15px;
+      line-height: 1.75;
+      opacity: 0.9;
+    }
+    .section-body strong { color: var(--text-color); opacity: 1; }
+
+    /* ── Report Header Bar ── */
+    .report-top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+    .report-top-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-color);
+    }
+    .report-meta {
+      font-size: 13px;
+      color: var(--muted-color, #94a3b8);
+      margin-top: 4px;
+    }
+    .download-btn {
+      background: linear-gradient(135deg, #7c3aed, #ec4899);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+    }
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
+    }
+
+    /* ── Tables inside sections ── */
+    .section-body table {
+      color: var(--text-color);
+    }
+    .section-body table code {
+      background: rgba(124,58,237,0.1);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 0.85em;
+    }
+    .section-body table tr:hover td {
+      background: rgba(255,255,255,0.03);
+    }
+
+    /* ── Loader ── */
+    .report-loader {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--muted-color, #94a3b8);
+    }
+    .report-loader i { font-size: 36px; color: #7c3aed; margin-bottom: 16px; display: block; }
+    .report-loader p { font-size: 15px; }
+
+    /* ── Error State ── */
+    .report-error {
+      text-align: center;
+      padding: 60px 20px;
+      color: #f87171;
+    }
+    .report-error i { font-size: 32px; margin-bottom: 12px; display: block; }
+  </style>
+</head>
+
+<body>
+  <div class="dashboard">
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-icon"><i class="fa-solid fa-chart-simple"></i></div>
+        <div>
+          <h2>TrafficIQ</h2>
+          <p>Analytics Platform</p>
+        </div>
+      </div>
+
+      <nav>
+        <ul>
+          <li><a href="index.html"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
+          <li><a href="traffic.html"><i class="fa-solid fa-arrow-trend-up"></i> Traffic Intelligence</a></li>
+          <li><a href="load.html"><i class="fa-solid fa-server"></i> Load Intelligence</a></li>
+          <li><a href="ads.html"><i class="fa-solid fa-bullhorn"></i> Ad Analytics</a></li>
+          <li><a href="users.html"><i class="fa-solid fa-users"></i> User Behavior</a></li>
+          <li><a href="security.html"><i class="fa-solid fa-shield-halved"></i> Security Logs</a></li>
+          <li><a href="configuration.html"><i class="fa-solid fa-gear"></i> Configuration</a></li>
+          <li class="active"><a href="reports.html"><i class="fa-solid fa-file-pdf"></i> Business Report</a></li>
+          <li><a href="about.html"><i class="fa-solid fa-address-card"></i> About Us</a></li>
+        </ul>
+      </nav>
+
+      <div class="status">
+        <p class="status-title">SYSTEM STATUS</p>
+        <p id="systemStatus" class="status-green">All Systems Operational</p>
+        <button onclick="logout()" class="logout-radial">
+          <span><i class="fa-solid fa-right-from-bracket"></i> Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="hero" style="background: linear-gradient(135deg, #10b981, #3b82f6);">
+        <div class="hero-left">
+          <div class="hero-main-icon"><i class="fa-solid fa-file-contract"></i></div>
+          <div class="hero-text">
+            <h1>Business Intelligence Report</h1>
+            <p>Comprehensive executive summary of platform metrics</p>
+          </div>
+        </div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+          <button id="themeToggle" onclick="toggleTheme(event)"
+            style="padding: 10px 15px; border-radius: 12px; border: none; cursor: pointer; background: rgba(255,255,255,0.2); color: white; font-weight: 600; transition: 0.3s; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-moon theme-icon-toggle"></i> Theme
+          </button>
+          <div class="live-box">
+            <span class="live-dot"></span>
+            LIVE NOW
+            <h3 id="clock"></h3>
+          </div>
+        </div>
+      </header>
+
+      <!-- Content injected here -->
+      <div id="reportContent">
+        <div class="report-loader">
+          <i class="fa-solid fa-circle-notch fa-spin"></i>
+          <p>Generating business intelligence report…</p>
+        </div>
+      </div>
+
+      <footer class="dashboard-footer">
+        <p>TrafficIQ Analytics Platform | MediCaps University</p>
+        <span>© 2026 All Rights Reserved</span>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    // Live clock
+    function updateClock() {
+      const clockElement = document.getElementById("clock");
+      if (clockElement) {
+        clockElement.innerHTML = new Date().toLocaleTimeString();
+      }
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    const SECTION_META = [
+      {
+        key: "executive_summary",
+        icon: "fa-briefcase",
+        iconBg: "linear-gradient(135deg,#7c3aed,#ec4899)",
+        iconColor: "#fff",
+        title: "Executive Summary",
+        subtitle: "High-level overview of all platform metrics",
+      },
+      {
+        key: "traffic_analysis",
+        icon: "fa-arrow-trend-up",
+        iconBg: "linear-gradient(135deg,#3b82f6,#06b6d4)",
+        iconColor: "#fff",
+        title: "Traffic Analysis",
+        subtitle: "Session volume, sources, and hourly distribution",
+      },
+      {
+        key: "geo_distribution",
+        icon: "fa-earth-asia",
+        iconBg: "linear-gradient(135deg,#06b6d4,#10b981)",
+        iconColor: "#fff",
+        title: "Geographic Distribution",
+        subtitle: "Top countries by session volume",
+      },
+      {
+        key: "server_load",
+        icon: "fa-server",
+        iconBg: "linear-gradient(135deg,#f59e0b,#ef4444)",
+        iconColor: "#fff",
+        title: "Server Load & Performance",
+        subtitle: "CPU, memory, network, latency & top endpoints",
+      },
+      {
+        key: "user_behavior",
+        icon: "fa-users-viewfinder",
+        iconBg: "linear-gradient(135deg,#8b5cf6,#3b82f6)",
+        iconColor: "#fff",
+        title: "User Behavior & Retention",
+        subtitle: "Orders, funnel drop-off, retention, and category revenue",
+      },
+      {
+        key: "ad_performance",
+        icon: "fa-bullhorn",
+        iconBg: "linear-gradient(135deg,#ec4899,#f59e0b)",
+        iconColor: "#fff",
+        title: "Ad Performance",
+        subtitle: "CTR, CPC, ROAS, funnel, and format breakdown",
+      },
+      {
+        key: "security_report",
+        icon: "fa-shield-halved",
+        iconBg: "linear-gradient(135deg,#ef4444,#7c3aed)",
+        iconColor: "#fff",
+        title: "Security Report",
+        subtitle: "Threats, error rates, activity log, and flagged IPs",
+      },
+    ];
+
+    const KPI_META = [
+      { key: "total_sessions",  label: "Total Sessions",   icon: "fa-chart-line",       color: "#3b82f6" },
+      { key: "total_requests",  label: "Total Requests",   icon: "fa-server",            color: "#f59e0b" },
+      { key: "total_orders",    label: "Total Orders",     icon: "fa-bag-shopping",      color: "#10b981" },
+      { key: "retention_rate",  label: "Retention Rate",   icon: "fa-arrow-rotate-left", color: "#8b5cf6" },
+      { key: "avg_rating",      label: "Avg. Rating",      icon: "fa-star",              color: "#f59e0b" },
+      { key: "roas",            label: "ROAS",             icon: "fa-chart-pie",         color: "#ec4899" },
+      { key: "security_score",  label: "Security Score",   icon: "fa-shield-halved",     color: "#10b981" },
+      { key: "threats_blocked", label: "Threats Blocked",  icon: "fa-shield-virus",      color: "#ef4444" },
+    ];
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      try {
+        const res = await fetch("/api/report/summary", { credentials: "include" });
+        if (!res.ok) throw new Error(`HTTP ${res.status}: ${await res.text()}`);
+        const data = await res.json();
+
+        let html = "";
+
+        // ── Top bar ──
+        html += `
+          <div style="padding: 0 0 4px;">
+            <div class="report-top-header">
+              <div>
+                <div class="report-top-title"><i class="fa-solid fa-chart-pie" style="color:#7c3aed;margin-right:10px"></i>Executive Analytics Report</div>
+                <div class="report-meta"><i class="fa-regular fa-clock" style="margin-right:6px"></i>Generated: ${data.generated_at}</div>
+              </div>
+              <a href="/api/report/download" class="download-btn">
+                <i class="fa-solid fa-download"></i> Download PDF
+              </a>
+            </div>
+          </div>`;
+
+        // ── KPI Scorecards ──
+        if (data.kpis) {
+          html += `<div class="kpi-grid">`;
+          KPI_META.forEach(m => {
+            const val = data.kpis[m.key] || "—";
+            html += `
+              <div class="kpi-card" style="--kpi-color:${m.color}">
+                <div class="kpi-icon" style="color:${m.color}"><i class="fa-solid ${m.icon}"></i></div>
+                <div class="kpi-value">${val}</div>
+                <div class="kpi-label">${m.label}</div>
+              </div>`;
+          });
+          html += `</div>`;
+        }
+
+        // ── Sections ──
+        SECTION_META.forEach((sec, i) => {
+          const content = data[sec.key];
+          if (!content) return;
+          html += `
+            <div class="report-card" style="animation-delay:${i * 0.07}s">
+              <div class="section-header">
+                <div class="section-icon" style="background:${sec.iconBg}; color:${sec.iconColor}">
+                  <i class="fa-solid ${sec.icon}"></i>
+                </div>
+                <div>
+                  <div class="section-title">${i + 1}. ${sec.title}</div>
+                  <div class="section-subtitle">${sec.subtitle}</div>
+                </div>
+              </div>
+              <div class="section-body">${content}</div>
+            </div>`;
+        });
+
+        document.getElementById("reportContent").innerHTML = html;
+
+      } catch (err) {
+        console.error(err);
+        document.getElementById("reportContent").innerHTML = `
+          <div class="report-error">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <strong>Failed to load report data.</strong><br>
+            <span style="font-size:13px;opacity:0.7">${err.message}</span>
+          </div>`;
+      }
+    });
+  </script>
+</body>
+</html>
