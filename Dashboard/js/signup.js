@@ -18,7 +18,7 @@ function signup() {
   btn.disabled = true;
   btn.textContent = "Creating account…";
 
-  fetch("http://127.0.0.1:8000/api/signup", {
+  fetch(`${API_BASE}/api/signup`, {
     // ✅ Fix 1: correct URL
     method: "POST",
     credentials: "include", // ✅ Fix 2: include cookies

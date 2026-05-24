@@ -11,7 +11,7 @@ function login() {
   btn.disabled = true;
   btn.textContent = "Signing in…";
 
-  fetch("http://127.0.0.1:8000/api/login", {
+  fetch(`${API_BASE}/api/login`, {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
