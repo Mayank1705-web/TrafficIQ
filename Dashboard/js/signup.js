@@ -10,7 +10,6 @@ function signup() {
   }
 
   if (password.length < 8) {
-    // ✅ Fix 3: minimum 8 characters
     showMsg("Password must be at least 8 characters.", "error");
     return;
   }
@@ -19,9 +18,8 @@ function signup() {
   btn.textContent = "Creating account…";
 
   fetch(`${API_BASE}/api/signup`, {
-    // ✅ Fix 1: correct URL
     method: "POST",
-    credentials: "include", // ✅ Fix 2: include cookies
+    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, email, password }),
   })

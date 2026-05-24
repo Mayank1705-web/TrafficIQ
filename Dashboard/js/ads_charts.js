@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   const loader = document.getElementById("loader");
 
-  fetch("http://127.0.0.1:8000/ads", { credentials: "include" })
+  fetch(`${API_BASE}/ads", { credentials: "include" })
     .then((res) => res.json())
     .then((data) => {
       if (document.getElementById("impressions")) document.getElementById("impressions").innerText = data.total_impressions.toLocaleString();
