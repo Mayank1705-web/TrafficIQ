@@ -1,9 +1,7 @@
 import os
-import sqlite3
 import secrets
 import time
 from collections import defaultdict
-from pathlib import Path
 from datetime import datetime, timedelta, timezone
 
 import bcrypt
@@ -11,24 +9,47 @@ import jwt
 from fastapi import APIRouter, Request, HTTPException, Response
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
+from sqlalchemy import create_engine, text
 
 router = APIRouter()
 
-BASE_DIR = Path(__file__).resolve().parent
-DB_PATH = Path(os.environ.get(
-    "DB_PATH",
-    str(BASE_DIR.parent / "Database" / "trafficIQ_users.db")
-))
-DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+# ── Database ────────────────────────────────────────────────────────────────
 
-JWT_SECRET = os.environ.get("JWT_SECRET", secrets.token_hex(32))
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+def get_engine():
+    if not DATABASE_URL:
+        raise RuntimeError("DATABASE_URL environment variable not set.")
+    return create_engine(DATABASE_URL)
+
+def init_db() -> None:
+    """Create users table in Supabase if it doesn't exist."""
+    engine = get_engine()
+    with engine.begin() as conn:
+        conn.execute(text("""
+            CREATE TABLE IF NOT EXISTS users (
+                id         SERIAL       PRIMARY KEY,
+                username   TEXT         NOT NULL UNIQUE,
+                email      TEXT         NOT NULL UNIQUE,
+                password   TEXT         NOT NULL,
+                role       TEXT         DEFAULT '',
+                country    TEXT         DEFAULT '',
+                company    TEXT         DEFAULT '',
+                created_at TIMESTAMPTZ  DEFAULT NOW()
+            )
+        """))
+
+# ── JWT ─────────────────────────────────────────────────────────────────────
+
+JWT_SECRET    = os.environ.get("JWT_SECRET", secrets.token_hex(32))
 JWT_ALGORITHM = "HS256"
 TOKEN_TTL_MIN = 60
+
+# ── Rate limiting ────────────────────────────────────────────────────────────
 
 _login_attempts: dict = defaultdict(list)
 RATE_WINDOW = 15 * 60
 RATE_MAX    = 5
-
 
 def _check_rate_limit(ip: str) -> None:
     now  = time.monotonic()
@@ -38,39 +59,15 @@ def _check_rate_limit(ip: str) -> None:
         raise HTTPException(429, "Too many login attempts. Please wait 15 minutes.")
     _login_attempts[ip].append(now)
 
-
-def get_db():
-    conn = sqlite3.connect(str(DB_PATH))
-    conn.row_factory = sqlite3.Row
-    return conn
-
-
-def init_db() -> None:
-    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
-    conn = get_db()
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS users (
-            id         INTEGER  PRIMARY KEY AUTOINCREMENT,
-            username   TEXT     NOT NULL UNIQUE,
-            email      TEXT     NOT NULL UNIQUE,
-            password   TEXT     NOT NULL,
-            role       TEXT     DEFAULT '',
-            country    TEXT     DEFAULT '',
-            company    TEXT     DEFAULT '',
-            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
-    """)
-    conn.commit()
-    conn.close()
-
+# ── Password helpers ─────────────────────────────────────────────────────────
 
 def hash_password(plain: str) -> str:
     return bcrypt.hashpw(plain.encode(), bcrypt.gensalt()).decode()
 
-
 def verify_password(plain: str, hashed: str) -> bool:
     return bcrypt.checkpw(plain.encode(), hashed.encode())
 
+# ── Token helpers ─────────────────────────────────────────────────────────────
 
 def create_token(username: str) -> str:
     payload = {
@@ -80,13 +77,11 @@ def create_token(username: str) -> str:
     }
     return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
-
 def decode_token(token: str) -> dict:
     return jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
 
+# ── Pydantic models ───────────────────────────────────────────────────────────
 
-# Simple models — NO strict validators so no 422 errors
-# Validation is done manually inside the route with friendly error messages
 class UserSignup(BaseModel):
     username: str = ""
     email:    str = ""
@@ -95,15 +90,14 @@ class UserSignup(BaseModel):
     role:     str = ""
     country:  str = ""
 
-
 class UserLogin(BaseModel):
     username: str = ""
     password: str = ""
 
+# ── Routes ────────────────────────────────────────────────────────────────────
 
 @router.post("/api/signup")
 def signup(user: UserSignup) -> JSONResponse:
-    # Manual validation with friendly messages
     username = user.username.strip()
     email    = user.email.strip().lower()
     password = user.password
@@ -117,24 +111,24 @@ def signup(user: UserSignup) -> JSONResponse:
     if len(password) < 8:
         return JSONResponse({"success": False, "message": "Password must be at least 8 characters."}, status_code=400)
 
-    conn = get_db()
     try:
-        conn.execute(
-            "INSERT INTO users (username,email,password,company,role,country) VALUES (?,?,?,?,?,?)",
-            (username, email, hash_password(password),
-             user.company.strip(), user.role.strip(), user.country.strip()),
-        )
-        conn.commit()
+        engine = get_engine()
+        with engine.begin() as conn:
+            conn.execute(
+                text("INSERT INTO users (username, email, password, company, role, country) VALUES (:u, :e, :p, :c, :r, :co)"),
+                {"u": username, "e": email, "p": hash_password(password),
+                 "c": user.company.strip(), "r": user.role.strip(), "co": user.country.strip()}
+            )
         return JSONResponse({"success": True, "message": f"Welcome to TrafficIQ, {username}!"})
 
-    except sqlite3.IntegrityError as e:
-        msg = "Username already taken." if "username" in str(e) else "Email already registered."
-        return JSONResponse({"success": False, "message": msg}, status_code=409)
     except Exception as e:
+        err = str(e).lower()
+        if "unique" in err and "username" in err:
+            return JSONResponse({"success": False, "message": "Username already taken."}, status_code=409)
+        if "unique" in err and "email" in err:
+            return JSONResponse({"success": False, "message": "Email already registered."}, status_code=409)
         print(f"[signup error] {e}")
         return JSONResponse({"success": False, "message": "Server error."}, status_code=500)
-    finally:
-        conn.close()
 
 
 @router.post("/api/login")
@@ -146,16 +140,19 @@ def login(user: UserLogin, request: Request) -> JSONResponse:
     if not username or not user.password:
         return JSONResponse({"success": False, "message": "Username and password are required."}, status_code=400)
 
-    conn = get_db()
     try:
-        row = conn.execute(
-            "SELECT * FROM users WHERE username = ?", (username,)
-        ).fetchone()
-    finally:
-        conn.close()
+        engine = get_engine()
+        with engine.connect() as conn:
+            row = conn.execute(
+                text("SELECT * FROM users WHERE username = :u"),
+                {"u": username}
+            ).fetchone()
+    except Exception as e:
+        print(f"[login db error] {e}")
+        return JSONResponse({"success": False, "message": "Server error."}, status_code=500)
 
     dummy_hash  = bcrypt.hashpw(b"dummy", bcrypt.gensalt()).decode()
-    stored_hash = row["password"] if row else dummy_hash
+    stored_hash = row.password if row else dummy_hash
     valid       = verify_password(user.password, stored_hash) and row is not None
 
     if not valid:
@@ -164,15 +161,15 @@ def login(user: UserLogin, request: Request) -> JSONResponse:
             status_code=401
         )
 
-    token = create_token(row["username"])
-    resp  = JSONResponse({"success": True, "username": row["username"]})
+    token = create_token(row.username)
+    resp  = JSONResponse({"success": True, "username": row.username})
     resp.set_cookie(
         key="session",
         value=token,
         httponly=True,
         samesite="lax",
         max_age=TOKEN_TTL_MIN * 60,
-        secure=False,
+        secure=True,
     )
     return resp
 
