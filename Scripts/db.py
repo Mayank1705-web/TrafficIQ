@@ -1,6 +1,6 @@
 import os
-from sqlalchemy import create_engine
 import pandas as pd
+from sqlalchemy import create_engine, text
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
@@ -12,4 +12,7 @@ def get_engine():
 def query_df(sql: str) -> pd.DataFrame:
     engine = get_engine()
     with engine.connect() as conn:
-        return pd.read_sql(sql, conn)
+        result = conn.execute(text(sql))
+        rows = result.fetchall()
+        columns = result.keys()
+        return pd.DataFrame(rows, columns=list(columns))
