@@ -32,11 +32,11 @@ def run_analysis(data_dir: str = None):
     # ── Hourly CTR trend ──────────────────────────────────────────────────────
     hourly_df = query_df("""
         SELECT
-            EXTRACT(hour FROM datetime::timestamp)::int  AS hour,
+            EXTRACT(hour FROM "DateTime"::timestamp)::int  AS hour,
             COUNT(*)                                      AS impressions,
             SUM(is_click::int)                            AS clicks
         FROM ads
-        WHERE datetime IS NOT NULL
+        WHERE "DateTime" IS NOT NULL
         GROUP BY hour
         ORDER BY hour
     """)

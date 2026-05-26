@@ -18,9 +18,7 @@ function checkLogin() {
 }
 
 function redirectToLogin() {
-  const depth = location.pathname.split("/").filter(Boolean).length;
-  const prefix = depth > 1 ? "../".repeat(depth - 1) : "";
-  window.location.replace(`${prefix}pages/login.html`);
+  window.location.replace("/login.html");
 }
 
 async function logout() {
@@ -30,5 +28,5 @@ async function logout() {
       credentials: "include",
     });
   } catch {}
-  window.location.replace("login.html");
+  window.location.replace("/login.html");
 }
