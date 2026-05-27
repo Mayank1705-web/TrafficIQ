@@ -1,5 +1,6 @@
 import os
-import datetime
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
 from reportlab.lib import colors
@@ -235,9 +236,9 @@ def _methodology_note(text, story, s):
 
 
 def generate_business_report(output_path: str, data_dir: str):
-    now      = datetime.datetime.utcnow()
+    now = datetime.now(ZoneInfo("Asia/Kolkata"))
     date_str = now.strftime("%B %d, %Y")
-    time_str = now.strftime("%H:%M UTC")
+    time_str = now.strftime("%I:%M:%S %p IST")
 
     traffic  = _traffic(data_dir)
     load     = _load(data_dir)
