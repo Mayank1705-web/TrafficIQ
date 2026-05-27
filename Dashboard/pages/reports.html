@@ -13,7 +13,7 @@
   <script src="/js/theme.js"></script>
   <script src="/js/common.js"></script>
   <style>
-    /* ── KPI Scorecards ── */
+    /*KPI Scorecards*/
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -56,7 +56,7 @@
       margin-top: 4px;
     }
 
-    /* ── Report Card ── */
+    /*Report Card*/
     .report-card {
       background: var(--card-bg);
       border-radius: 20px;
@@ -78,7 +78,7 @@
     .report-card:nth-child(7) { animation-delay: 0.30s; }
     .report-card:nth-child(8) { animation-delay: 0.35s; }
 
-    /* ── Section Header ── */
+    /*Section Header*/
     .section-header {
       display: flex;
       align-items: center;
@@ -105,7 +105,7 @@
       margin-top: 2px;
     }
 
-    /* ── Body Text ── */
+    /*Body Text*/
     .section-body {
       color: var(--text-color);
       font-size: 15px;
@@ -114,7 +114,7 @@
     }
     .section-body strong { color: var(--text-color); opacity: 1; }
 
-    /* ── Report Header Bar ── */
+    /*Report Header Bar*/
     .report-top-header {
       display: flex;
       justify-content: space-between;
@@ -151,7 +151,7 @@
       box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
     }
 
-    /* ── Tables inside sections ── */
+    /*Tables inside sections*/
     .section-body table {
       color: var(--text-color);
     }
@@ -174,7 +174,7 @@
     .report-loader i { font-size: 36px; color: #7c3aed; margin-bottom: 16px; display: block; }
     .report-loader p { font-size: 15px; }
 
-    /* ── Error State ── */
+    /*Error State*/
     .report-error {
       text-align: center;
       padding: 60px 20px;
@@ -344,7 +344,7 @@
 
         let html = "";
 
-        // ── Top bar ──
+        //Top bar
         html += `
           <div style="padding: 0 0 4px;">
             <div class="report-top-header">
@@ -358,7 +358,7 @@
             </div>
           </div>`;
 
-        // ── KPI Scorecards ──
+        //KPI Scorecards
         if (data.kpis) {
           html += `<div class="kpi-grid">`;
           KPI_META.forEach(m => {
@@ -373,7 +373,7 @@
           html += `</div>`;
         }
 
-        // ── Sections ──
+        //Sections
         SECTION_META.forEach((sec, i) => {
           const content = data[sec.key];
           if (!content) return;

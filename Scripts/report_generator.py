@@ -177,6 +177,7 @@ def _tbl(hdr_color=C_PURPLE):
         ("RIGHTPADDING",   (0,0), (-1,-1), 7),
         ("TOPPADDING",     (0,0), (-1,-1), 5),
         ("BOTTOMPADDING",  (0,0), (-1,-1), 5),
+        ("WORDWRAP",       (0,0), (-1,-1), "CJK"),
         ("GRID",           (0,0), (-1,-1), 0.3, C_BORDER),
     ])
 
@@ -297,9 +298,7 @@ def generate_business_report(output_path: str, data_dir: str):
     story = []
     W = A4[0] - 4*cm
 
-    # ══════════════════════════════════════════════════════════════════════════
     # COVER PAGE
-    # ══════════════════════════════════════════════════════════════════════════
     sec_col = C_GREEN if sec_score >= 70 else (C_ORANGE if sec_score >= 50 else C_RED)
     kpis = [
         ("Total Sessions",  f"{total_sess:,}",             C_BLUE),
@@ -340,9 +339,7 @@ def generate_business_report(output_path: str, data_dir: str):
     story.append(KeepTogether(toc_t))
     story.append(PageBreak())
 
-    # ══════════════════════════════════════════════════════════════════════════
     # 1. EXECUTIVE SUMMARY
-    # ══════════════════════════════════════════════════════════════════════════
     _banner("1.  Executive Summary", story, s, C_DARK, W)
 
     story.append(Paragraph(
@@ -489,7 +486,7 @@ def generate_business_report(output_path: str, data_dir: str):
          "Primary" if v == max(sources.values()) else "Secondary"]
         for src, v in top_src
     ]
-    st = Table(src_d, colWidths=[W*0.28, W*0.22, W*0.18, W*0.32])
+    st = Table(src_d, colWidths=[W*0.24, W*0.20, W*0.16, W*0.40])
     st.setStyle(_tbl(C_BLUE))
     story.append(st)
     story.append(Paragraph("Table 2.1 — Traffic by Acquisition Source", s["caption"]))
@@ -546,15 +543,13 @@ def generate_business_report(output_path: str, data_dir: str):
         ["No off-peak engagement", "Wasted server capacity 22:00-06:00",
          "B2B-only audience, no consumer use case", "Develop consumer-facing features"],
     ]
-    ti = Table(tr_issues, colWidths=[W*0.22, W*0.20, W*0.26, W*0.32])
+    ti = Table(tr_issues, colWidths=[W*0.18, W*0.20, W*0.28, W*0.34])
     ti.setStyle(_tbl(C_RED))
     story.append(ti)
     story.append(Paragraph("Table 2.3 — Traffic Issues &amp; Strategic Remediation Plan", s["caption"]))
     story.append(PageBreak())
 
-    # ══════════════════════════════════════════════════════════════════════════
     # 3. SERVER LOAD
-    # ══════════════════════════════════════════════════════════════════════════
     _banner("3.  Server Load &amp; Performance Analysis", story, s, C_ORANGE, W)
 
     story.append(Paragraph("<b>3.1  Infrastructure Health Assessment</b>", s["subsec"]))
@@ -665,15 +660,13 @@ def generate_business_report(output_path: str, data_dir: str):
         ["No response time SLA", "No performance monitoring",
          "Add APM tool (Datadog/New Relic)", "Define & enforce p99 latency SLAs"],
     ]
-    lit = Table(li, colWidths=[W*0.18, W*0.20, W*0.28, W*0.34])
+    lit = Table(li, colWidths=[W*0.16, W*0.20, W*0.30, W*0.34])
     lit.setStyle(_tbl(C_RED))
     story.append(lit)
     story.append(Paragraph("Table 3.3 — Load Issues &amp; Remediation Plan", s["caption"]))
     story.append(PageBreak())
 
-    # ══════════════════════════════════════════════════════════════════════════
     # 4. USER BEHAVIOUR
-    # ══════════════════════════════════════════════════════════════════════════
     _banner("4.  User Behaviour &amp; Retention Analysis", story, s, C_PURPLE, W)
 
     story.append(Paragraph("<b>4.1  Customer Overview &amp; Cohort Health</b>", s["subsec"]))
@@ -801,9 +794,7 @@ def generate_business_report(output_path: str, data_dir: str):
         story.append(Paragraph("Table 4.4 — Revenue by Age Group with Channel Recommendations", s["caption"]))
     story.append(PageBreak())
 
-    # ══════════════════════════════════════════════════════════════════════════
     # 5. ADS
-    # ══════════════════════════════════════════════════════════════════════════
     _banner("5.  Advertisement Performance Analysis", story, s, C_PINK, W)
 
     story.append(Paragraph("<b>5.1  Campaign Performance Overview</b>", s["subsec"]))
@@ -909,9 +900,7 @@ def generate_business_report(output_path: str, data_dir: str):
     )
     story.append(PageBreak())
 
-    # ══════════════════════════════════════════════════════════════════════════
     # 6. SECURITY
-    # ══════════════════════════════════════════════════════════════════════════
     _banner("6.  Security &amp; Threat Analysis", story, s, C_RED, W)
 
     story.append(Paragraph("<b>6.1  Security Posture Assessment</b>", s["subsec"]))
@@ -1036,9 +1025,7 @@ def generate_business_report(output_path: str, data_dir: str):
     )
     story.append(PageBreak())
 
-    # ══════════════════════════════════════════════════════════════════════════
     # 7. RECOMMENDATIONS
-    # ══════════════════════════════════════════════════════════════════════════
     _banner("7.  Key Findings &amp; Business Recommendations", story, s, C_DARK, W)
 
     story.append(Paragraph("<b>7.1  Executive Summary of Findings</b>", s["subsec"]))
@@ -1185,9 +1172,7 @@ def generate_business_report(output_path: str, data_dir: str):
     story.append(Paragraph("Table 7.4 — 30-60-90 Day Strategic Roadmap", s["caption"]))
     story.append(PageBreak())
 
-    # ══════════════════════════════════════════════════════════════════════════
     # APPENDIX
-    # ══════════════════════════════════════════════════════════════════════════
     _banner("Appendix — Full Key Performance Indicators", story, s, C_SLATE, W)
 
     story.append(Paragraph(
