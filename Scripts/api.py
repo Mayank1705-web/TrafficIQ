@@ -244,7 +244,7 @@ def report_summary(_: str = Depends(require_auth)):
         )
 
         return {
-            "generated_at": datetime.datetime.now().strftime("%B %d, %Y — %H:%M"),
+            "generated_at": (datetime.datetime.utcnow() + datetime.timedelta(hours=5, minutes=30)).strftime("%d %B %Y — %I:%M %p IST"),
             "kpis": {
                 "total_sessions":  f"{total_sess:,}",
                 "total_requests":  f"{load['total_requests']:,}",
