@@ -1775,3 +1775,38 @@ body.dark-theme .loader-text {
 
 body.dark-theme .activity-row { background: #334155; border-color: #475569; }
 body.dark-theme .activity-row h4 { color: #f8fafc; }
+
+/* ── Dark theme logout button improvement ── */
+body.dark-theme .logout-radial {
+  background: linear-gradient(135deg, rgba(239,68,68,0.12), rgba(220,38,38,0.2));
+  color: #fca5a5;
+  border: 1px solid rgba(239,68,68,0.35);
+  box-shadow: 0 0 14px rgba(239,68,68,0.12);
+  border-radius: 10px;
+  padding: 10px 20px;
+  margin-top: 15px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+body.dark-theme .logout-radial::before {
+  display: none;
+}
+body.dark-theme .logout-radial:hover {
+  background: linear-gradient(135deg, rgba(239,68,68,0.28), rgba(220,38,38,0.42));
+  color: #fff;
+  border-color: rgba(239,68,68,0.7);
+  box-shadow: 0 0 22px rgba(239,68,68,0.35);
+  transform: translateY(-1px);
+}
+body.dark-theme .logout-radial span {
+  color: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
