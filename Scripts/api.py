@@ -321,3 +321,5 @@ def report_summary(_: str = Depends(require_auth)):
         raise HTTPException(500, str(e))
 
 app.include_router(auth_router)
+from dashboard_api import router as dashboard_router
+app.include_router(dashboard_router)
