@@ -24,13 +24,16 @@ function initClock() {
     if (!clockElement) return;
 
     function updateClock() {
-        const now = new Date();
-        clockElement.innerHTML = now.toLocaleTimeString([], { 
-            hour: '2-digit', 
-            minute: '2-digit', 
-            second: '2-digit' 
-        });
-    }
+    const now = new Date();
+    const istTime = now.toLocaleTimeString("en-IN", {
+        timeZone: "Asia/Kolkata",
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+    });
+    clockElement.innerHTML = istTime;
+}
 
     updateClock();
     setInterval(updateClock, 1000);
