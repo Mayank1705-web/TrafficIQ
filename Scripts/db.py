@@ -4,13 +4,20 @@ from sqlalchemy import create_engine, text
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
-def get_engine():
-    if not DATABASE_URL:
-        raise RuntimeError("DATABASE_URL environment variable not set.")
-    return create_engine(DATABASE_URL)
+if not DATABASE_URL:
+    raise RuntimeError("DATABASE_URL environment variable not set.")
+
+# Create ONE global engine only
+engine = create_engine(
+    DATABASE_URL,
+    pool_size=3,
+    max_overflow=2,
+    pool_timeout=30,
+    pool_recycle=1800,
+    pool_pre_ping=True
+)
 
 def query_df(sql: str) -> pd.DataFrame:
-    engine = get_engine()
     with engine.connect() as conn:
         result = conn.execute(text(sql))
         rows = result.fetchall()
